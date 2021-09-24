@@ -1,8 +1,10 @@
 from flask import jsonify
+import json
 import PizzaPersistence
 
 def get_all_pizzas():
-    return jsonify(PizzaPersistence.get_all_pizzas())
+    pizzas = PizzaPersistence.get_all_pizzas()
+    return {'temp':str(pizzas)}
 
 def get_all_drinks():
     return {"drinks": [ {

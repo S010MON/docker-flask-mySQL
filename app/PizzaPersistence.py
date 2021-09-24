@@ -14,7 +14,7 @@ cnx = mysql.connector.connect(user='root',
 config = {  'user': 'root',
             'password': 'password',
             'host': 'db',
-            'port': '30000',
+            'port': '3306',
             'database': 'pizzas'
          }
 
