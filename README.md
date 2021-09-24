@@ -1,11 +1,11 @@
-#### Installation Guide
+## Installation Guide
 
 Ensure that docker and docker-compose are installed
 
         docker version
         docker-compose --version
         
-#### To run both containers
+### To run both containers
 Build the container
 
         sudo docker-compose build
@@ -14,10 +14,10 @@ Run the container
         
         sudo docker-compose up
 
+Done!
 
 
-
-#### Troubleshooting: To check that MySQL database has loaded
+### Troubleshooting: To check that MySQL database has loaded
 List all running containers:
 
         sudo docker ps
