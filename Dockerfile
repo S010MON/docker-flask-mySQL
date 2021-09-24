@@ -10,11 +10,8 @@ RUN apt-get -y update
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Install mySQL
-# RUN apt-get install -y mysql-server
-
 # Expose the API endpoint
- EXPOSE 5000
+EXPOSE 5000
 
 # Copy the application files
 ADD . .
