@@ -32,7 +32,7 @@ The command should look like, or very similar to this:
 
 Your prompt should change to a `#` now log into mysql
 
-        mysql -u root -p
-        password: password
+        $ mysql -u root -p
+        $ Enter password: password
 
 If the `SHOW DATABASES` command doesn't show the correct databases load in the database script from: `/docker-entrypoint-initdb.d/init.sql`
