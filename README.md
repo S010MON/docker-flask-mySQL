@@ -6,6 +6,8 @@ Ensure that docker and docker-compose are installed
         docker-compose --version
         
 ### To run both containers
+Navigate to the `docker-flask-mySQL/` root directory
+
 Build the container
 
         sudo docker-compose build
