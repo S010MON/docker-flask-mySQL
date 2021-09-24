@@ -55,5 +55,5 @@ api.add_resource(Customer, '/customer')
 api.add_resource(Order, '/order')
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
