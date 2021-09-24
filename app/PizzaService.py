@@ -9,7 +9,7 @@ api = Api(app)
 
 class Home(Resource):
     def get(self):
-        return {"Connected to Pizza Maastricht"}, 200
+        return {"Connected to":"Pizza Maastricht"}, 200
 
 class Pizza(Resource):
     def get(self):
