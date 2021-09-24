@@ -19,7 +19,7 @@ Run the container
         
         sudo docker-compose up
        
-#### TEMPORARYILY [While docker auto-initdb isn't working]
+#### TEMPORARILY [While docker auto-initdb isn't working]
 List all running containers:
 
         sudo docker ps
