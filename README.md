@@ -10,7 +10,8 @@ Navigate to the `docker-flask-mySQL` top level directory
 
         sudo docker build
         sudo docker run .
-        
+
+#### To run both containers (ie with db)
 Build the container
 
         sudo docker-compose build
