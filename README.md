@@ -31,7 +31,7 @@ Take the name of the container running the database and insert it into the below
 
 The command should look like, or very similar to this:
 
-        sudo docker exec -it docker-flask-mysql bash
+        sudo docker exec -it docker-flask-mysql_db_1 bash
 
 Your prompt should change to a `#` now log into mysql
 
