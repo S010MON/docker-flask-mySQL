@@ -8,7 +8,7 @@ Ensure that docker and docker-compose are installed
 #### To run just the API  (Ensure to remove links to database)
 Navigate to the `docker-flask-mySQL` top level directory
 
-        sudo docker run 
+        sudo docker run .
         
 Build the container
 
