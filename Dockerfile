@@ -19,6 +19,6 @@ RUN pip install -r requirements.txt
 # Copy the application files
 ADD . .
 WORKDIR /app
-
-CMD [ "python3","./PizzaService.py" ]
+ENTRYPOINT [ "python" ]
+CMD [ "./PizzaService.py" ]
 

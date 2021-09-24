@@ -6,19 +6,20 @@ from mysql.connector import (connection)
 import mysql.connector
 
 '''
-cnx = mysql.connector.connect(user='root', password='password',
-                              host='127.0.0.1',
+cnx = mysql.connector.connect(user='root', 
+                              password='password',
+                              host='db',
                               database='pizzas')
 '''
-
 config = {  'user': 'root',
             'password': 'password',
             'host': 'db',
-            'port': '3306',
+            'port': '30000',
             'database': 'pizzas'
          }
 
 cnx = mysql.connector.connect(**config)
+
 
 cursor = cnx.cursor()
 

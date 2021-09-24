@@ -1,19 +1,28 @@
 version: "3.1"
 services:
-  app:
-    build: .
+  db:
+    image: mysql:5.7
     restart: always
+
+    ports:
+      - "30000:3306"
+
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: root
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: pizzas
+    
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/:ro
+
+  app:
+    build: .            # Where the Dockerfile is stored
+    restart: always
+    
     links:
       - db
+    
     ports: 
       - "5000:5000"
 
-  db:
-    image: mysql:5.7
-    ports:
-      - "32000:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-    volumes:
-      - ./db:/docker
- 

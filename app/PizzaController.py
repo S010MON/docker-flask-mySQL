@@ -2,7 +2,7 @@ from flask import jsonify
 #import PizzaPersistence
 
 def get_all_pizzas():
-    return None # jsonify(PizzaPersistence.get_all_pizzas())
+    return {"not":"yet"} #jsonify(PizzaPersistence.get_all_pizzas())
 
 def get_all_drinks():
     return {"drinks": [ {
