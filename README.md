@@ -20,7 +20,8 @@ Done!
 
 --------------------------------------------------
 
-### Troubleshooting: To check that MySQL database has loaded
+## Troubleshooting
+### To check that MySQL database has loaded
 List all running containers:
 
         sudo docker ps
