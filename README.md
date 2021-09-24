@@ -5,13 +5,7 @@ Ensure that docker and docker-compose are installed
         docker version
         docker-compose --version
         
-#### To run just the API  (Ensure to remove links to database)
-Navigate to the `docker-flask-mySQL` top level directory
-
-        sudo docker build
-        sudo docker run .
-
-#### To run both containers (ie with db)
+#### To run both containers
 Build the container
 
         sudo docker-compose build
@@ -19,8 +13,11 @@ Build the container
 Run the container
         
         sudo docker-compose up
-       
-#### TEMPORARILY [While docker auto-initdb isn't working]
+
+
+
+
+#### Troubleshooting: To check that MySQL database has loaded
 List all running containers:
 
         sudo docker ps
@@ -37,5 +34,5 @@ Your prompt should change to a `#` now log into mysql
 
         mysql -u root -p
         password: password
-        
-Load in the database script from db/init.sql
+
+If the `SHOW DATABASES` command doesn't show the correct databases load in the database script from: `/docker-entrypoint-initdb.d/init.sql`
