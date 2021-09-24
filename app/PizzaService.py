@@ -6,6 +6,10 @@ from flask_restful import Resource, Api, reqparse
 app = Flask(__name__)
 api = Api(app)
 
+class Home(Resource):
+    def get(self):
+        return {"Connected to Pizza Maastricht"}, 200
+
 class Pizza(Resource):
     def get(self):
         return PizzaController.get_all_pizzas()
@@ -43,6 +47,7 @@ class Order(Resource):
         # Add making a new order
         return {"not yet implemented":"true"},404
 
+api.add_resource(Home, '/')
 api.add_resource(Pizza, '/pizza')
 api.add_resource(Drink, '/drink')
 api.add_resource(Desert, '/desert')
