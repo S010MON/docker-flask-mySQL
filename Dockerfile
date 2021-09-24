@@ -18,12 +18,7 @@ RUN pip install -r requirements.txt
 
 # Copy the application files
 ADD . .
-WORKDIR /server
+WORKDIR /app
 
-#CMD [ "service mysql start" ]
-#CMD [ "mysql" ]
-#CMD [ "SOURCE", "./dbms/pizzas_structure.sql;" ]
-#CMD [ "SOURCE", "./dbms/pizzas_data.sql;" ]  
-
-#CMD [ "python3","./PizzaService.py" ]
+CMD [ "python3","./PizzaService.py" ]
 
