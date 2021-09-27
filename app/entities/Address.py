@@ -1,4 +1,3 @@
-
 class Address:
 
     def __init__(self, address_id, house_no, street, town, postcode):

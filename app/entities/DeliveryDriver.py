@@ -1,4 +1,3 @@
-
 class DeliveryDriver:
 
     def __init__(self, delivery_driver_id, name, operating_area, on_task):

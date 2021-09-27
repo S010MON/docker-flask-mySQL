@@ -6,13 +6,6 @@ from mysql.connector import (connection)
 import mysql.connector
 
 '''
-cnx = mysql.connector.connect(user='root', 
-                              password='password',
-                              host='db',
-                              database='pizzas')
-'''
-
-'''
 # Docker config
 config = {  'user': 'root',
             'password': 'password',
@@ -63,7 +56,7 @@ def get_all_pizzas():
 
 def get_all_desserts():
     query = (
-        "SELECT dessert_id, dessert_name, dessert_price_euros, dessert_price_cents FROM Dessert;")  # need to add join for toppings
+        "SELECT dessert_id, dessert_name, dessert_price_euros, dessert_price_cents FROM Dessert;")
     cursor.execute(query)
     allDeserts = []
     for (dessert_id, dessert_name, dessert_price_euros, dessert_price_cents) in cursor:
