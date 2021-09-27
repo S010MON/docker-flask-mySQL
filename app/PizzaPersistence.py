@@ -111,6 +111,8 @@ if __name__ == '__main__':
     for dessert in get_all_desserts():
         print(dessert.dessert_id, dessert.name)
 
+    test_purchase = Purchase()
+
     # test_customer = Customer(1, )
 
     # get_customer_address()
