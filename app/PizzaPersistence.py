@@ -9,27 +9,19 @@ from mysql.connector import (connection)
 import mysql.connector
 
 # Docker config
-config = {  'user': 'root',
-            'password': 'password',
-            'host': 'db',
-            'port': '3306',
-            'database': 'pizzas'
-         }
-
-'''
-# Local test config
 config = {'user': 'root',
           'password': 'password',
-          'host': 'localhost',
+          'host': 'db',
           'port': '3306',
           'database': 'pizzas'
           }
-'''
 
 cnx = mysql.connector.connect(**config)
 
 cursor = cnx.cursor()
 
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_pizzas():
     query = ("SELECT Pizza.pizza_id, "
@@ -57,6 +49,8 @@ def get_all_pizzas():
     return allPizzas
 
 
+# ----------------------------------------------------------------------------------------------------------------------
+
 def get_all_desserts():
     query = (
         "SELECT dessert_id, dessert_name, dessert_price_euros, dessert_price_cents FROM Dessert;")
@@ -66,6 +60,8 @@ def get_all_desserts():
         allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price_euros, dessert_price_cents))  # add toppings
     return allDeserts
 
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_drinks():
     query = (
@@ -77,18 +73,7 @@ def get_all_drinks():
     return allDrinks
 
 
-def create_purchase(Purchase):
-    return None
-
-def get_address_id(address):
-    return None
-
-def get_customer(id):
-    query = ("SELECT customer_id, name, address_id, phone_number FROM Customer WHERE customer_id = %s")
-    cursor.execute(query, (id,))
-    result = cursor.fetchone()
-    customer_address = get_address(result[2])
-    return Customer(result[0], result[1], customer_address, result[3])
+# ----------------------------------------------------------------------------------------------------------------------
 
 def create_customer(customer):
     query = ("INSERT INTO Customer (name, address_id, phone_number)"
@@ -99,10 +84,20 @@ def create_customer(customer):
     current_id = cursor.lastrowid
     customer.customer_id = current_id
     cnx.commit()
+    return customer
 
-def get_customer_address(Customer):
-    query = (
-        "SELECT Address.street, Address.town, Address.postcode FROM Customer INNER JOIN Address ON Customer.customer_id = Order.customer_id;")
+
+def get_customer(id):
+    query = ("SELECT customer_id, name, address_id, phone_number FROM Customer WHERE customer_id = %s")
+    cursor.execute(query, (id,))
+    result = cursor.fetchone()
+    customer_address = get_address(result[2])
+    return Customer(result[0], result[1], customer_address, result[3])
+
+
+# ----------------------------------------------------------------------------------------------------------------------
+
+def create_purchase(purchase):
     return None
 
 
@@ -110,8 +105,11 @@ def get_purchase(purchase_id):
     return None
 
 
+# ----------------------------------------------------------------------------------------------------------------------
+
 def get_delivery_driver(purchase_id):
     return None
+
 
 def get_delivery_driver(id):
     query = ("SELECT driver_id, operating_area, on_task, name FROM DeliveryDriver WHERE driver_id = %s;")
@@ -119,16 +117,14 @@ def get_delivery_driver(id):
     result = cursor.fetchone()
     return DeliveryDriver(result[0], result[1], result[2], result[3])
 
-def set_delivery_driver_status(DeliveryDriver, status):
+
+def update_delivery_driver_status(DeliveryDriver, status):
     return None
 
-def get_address(id):
-    query = ("SELECT address_id. street, town, postcode FROM Address WHERE address_id = %s;")
-    cursor.execute(query, (id,))
-    result = cursor.fetchone()
-    return Address(result[0], result[1], result[2], result[3])
 
-def set_address(address):
+# ----------------------------------------------------------------------------------------------------------------------
+
+def create_address(address):
     query = ("INSERT INTO Address (street, town, postcode)"
              "VALUES (%s, %s, %s);")
 
@@ -137,7 +133,17 @@ def set_address(address):
     current_id = cursor.lastrowid
     address.address_id = current_id
     cnx.commit()
+    return address
 
+
+def get_address(id):
+    query = ("SELECT address_id. street, town, postcode FROM Address WHERE address_id = %s;")
+    cursor.execute(query, (id,))
+    result = cursor.fetchone()
+    return Address(result[0], result[1], result[2], result[3])
+
+
+# ----------------------------------------------------------------------------------------------------------------------
 
 # Main function to test query methods
 if __name__ == '__main__':
@@ -163,7 +169,7 @@ if __name__ == '__main__':
     print("---")
 
     test_address = Address("Dampstraat", "Maastricht", "6226GJ")
-    set_address(test_address)
+    create_address(test_address)
     print(test_address.address_id, test_address.town)
 
     test_customer = Customer("Leon", test_address, "+49 123456789")
