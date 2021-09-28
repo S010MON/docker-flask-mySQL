@@ -8,9 +8,9 @@ class Address:
         self.town = town
         self.postcode = postcode
 
-    def to_JSON(self):
-        return {"address_id": str(self.address),
-                "house_no": str(self.house_no),
+    def to_dict(self):
+        return {"address_id": self.address,
+                "house_no": self.house_no,
                 "street": self.street,
                 "town": self.town,
                 "postcode": self.postcode}

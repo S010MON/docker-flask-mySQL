@@ -7,8 +7,8 @@ class DeliveryDriver:
         self.operating_area = operating_area
         self.on_task = on_task
 
-    def to_JSON(self):
-        return {"id": str(self.delivery_driver_id),
+    def to_dict(self):
+        return {"delivery_driver_id": self.delivery_driver_id,
                 "name": self.name,
                 "operating area": self.operating_area,
-                "on task": str(self.on_task)}
+                "on task": self.on_task}

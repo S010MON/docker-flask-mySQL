@@ -6,8 +6,8 @@ class Customer:
         self.address = address
         self.phone = phone
 
-    def to_JSON(self):
-        return {"customer_id": str(self.customer_id),
+    def to_dict(self):
+        return {"customer_id": self.customer_id,
                 "name": self.name, 
-                "address": self.address.to_JSON(), 
-                "phone" str(self.phone)}
+                "address": self.address.to_dict, 
+                "phone" self.phone}
