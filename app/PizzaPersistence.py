@@ -3,6 +3,7 @@ from entities.DeliveryDriver import DeliveryDriver
 from entities.Pizza import Pizza
 from entities.Dessert import Dessert
 from entities.Drink import Drink
+from entities.Customer import Customer
 from mysql.connector import (connection)
 
 import mysql.connector
@@ -79,10 +80,25 @@ def get_all_drinks():
 def create_purchase(Purchase):
     return None
 
-
-def create_customer(Customer):
+def get_address_id(address):
     return None
 
+def get_customer(id):
+    query = ("SELECT customer_id, name, address_id, phone_number FROM Customer WHERE customer_id = %s")
+    cursor.execute(query, (id,))
+    result = cursor.fetchone()
+    customer_address = get_address(result[2])
+    return Customer(result[0], result[1], customer_address, result[3])
+
+def create_customer(customer):
+    query = ("INSERT INTO Customer (name, address_id, phone_number)"
+             "VALUES (%s, %s, %s);")
+
+    query_data = (customer.name, customer.address.address_id, customer.phone)
+    cursor.execute(query, query_data)
+    current_id = cursor.lastrowid
+    customer.customer_id = current_id
+    cnx.commit()
 
 def get_customer_address(Customer):
     query = (
@@ -106,8 +122,14 @@ def get_delivery_driver(id):
 def set_delivery_driver_status(DeliveryDriver, status):
     return None
 
+def get_address(id):
+    query = ("SELECT address_id. street, town, postcode FROM Address WHERE address_id = %s;")
+    cursor.execute(query, (id,))
+    result = cursor.fetchone()
+    return Address(result[0], result[1], result[2], result[3])
+
 def set_address(address):
-    query = ("INSERT INTO address (street, town, postcode)"
+    query = ("INSERT INTO Address (street, town, postcode)"
              "VALUES (%s, %s, %s);")
 
     query_data = (address.street, address.town, address.postcode)
@@ -144,6 +166,8 @@ if __name__ == '__main__':
     set_address(test_address)
     print(test_address.address_id, test_address.town)
 
-    #test_customer = Customer("Leon", )
+    test_customer = Customer("Leon", test_address, "+49 123456789")
+    create_customer(test_customer)
+    print(test_customer.customer_id, test_customer.name, test_customer.address.town)
 
     # get_customer_address()
