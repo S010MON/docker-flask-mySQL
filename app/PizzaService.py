@@ -13,15 +13,27 @@ class Home(Resource):
 
 class Pizza(Resource):
     def get(self):
-        return PizzaController.get_all_pizzas()
+        data = PizzaController.get_all_pizzas()
+        return jsonify( message="test message",
+                        category="success",
+                        data=data,
+                        status=200)
 
 class Drink(Resource):
     def get(self):
-        return PizzaController.get_all_drinks()
-
-class Desert(Resource):
+        data = PizzaController.get_all_drinks()
+        return jsonify( message="test message",
+                        category="success",
+                        data=data,
+                        status=200)
+class Dessert(Resource):
     def get(self):
-        return PizzaController.get_all_deserts()
+        data = PizzaController.get_all_desserts()
+        return jsonify( message="test message",
+                        category="success",
+                        data=data,
+                        status=200)
+
 
 class Customer(Resource):
     def get(self):
@@ -51,7 +63,7 @@ class Order(Resource):
 api.add_resource(Home, '/')
 api.add_resource(Pizza, '/pizza')
 api.add_resource(Drink, '/drink')
-api.add_resource(Desert, '/desert')
+api.add_resource(Dessert, '/dessert')
 api.add_resource(Customer, '/customer')
 api.add_resource(Order, '/order')
 

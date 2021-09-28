@@ -9,7 +9,10 @@ class Pizza:
         self.cost_cents = cost_cents
         self.toppings = toppings
 
-    def to_JSON(self):
-        return {"name": str(self.name),
-                "toppings": str(self.toppings),
-                "price": str(self.cost_euro + '.' + self.cost_cents)}
+    def to_dict(self):
+        return {"pizza_id": self.pizza_id,
+                "name": self.name,
+                "cost_euro": self.cost_euro,
+                "cost_cents": self.cost_cents,
+                "toppings": self.toppings}
+

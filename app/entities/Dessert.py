@@ -6,6 +6,8 @@ class Dessert:
         self.cost_euro = cost_euro
         self.cost_cents = cost_cents
 
-    def to_JSON(self):
-        return {"name": self.name,
-                "cost": str(self.cost_euro + "." + self.cost_cents)}
+    def to_dict(self):
+        return {"dessert_id": self.dessert_id,
+                "name": self.name,
+                "cost_euro": self.cost_euro,
+                "cost_cents": self.cost_cents}

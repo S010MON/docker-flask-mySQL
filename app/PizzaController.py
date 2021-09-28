@@ -4,30 +4,24 @@ import PizzaPersistence
 
 def get_all_pizzas():
     pizzas = PizzaPersistence.get_all_pizzas()
-    return {'temp':str(pizzas)}
+    data = []
+    for i in range(0, len(pizzas)):
+        data.append(pizzas[i].to_dict())
+    return data
 
 def get_all_drinks():
-    return {"drinks": [ {
-            "drink_id": 1,
-            "name": "beer",
-            "price": 3
-        },{
-            "drink_id": 2,
-            "name": "coke",
-            "price": 3
-        }]},200
+    drinks = PizzaPersistence.get_all_drinks()
+    data = []
+    for i in range(0, len(drinks)):
+        data.append(drinks[i].to_dict())
+    return data
 
-def get_all_deserts():
-        return {"deserts": [
-        {
-            "desert_id": 1,
-            "name": "ice cream",
-            "price": 4
-        },{
-            "desert_id": 2,
-            "name": "cheese cake",
-            "price": 5
-        }]}, 200
+def get_all_desserts():
+    desserts = PizzaPersistence.get_all_desserts()
+    data = []
+    for i in range(0, len(desserts)):
+        data.append(desserts[i].to_dict())
+    return data
 
 def get_order_by_id(order_id):
     if order_id == 1:
@@ -73,3 +67,4 @@ def get_customer_by_id(customer_id):
         "town":"London",
         "postcode":"WD1 1AB"}
     return response
+

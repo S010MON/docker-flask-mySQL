@@ -7,7 +7,9 @@ class Drink:
         self.cost_euro = cost_euro
         self.cost_cents = cost_cents
 
-    def to_JSON(self):
-        return {"name": str(self.name),
-                "price": str(self.cost_euro + "." + self.cost_cents)}
+    def to_dict(self):
+        return {"drink_id": self.drink_id,
+                "name": self.name,
+                "cost_euro": self.cost_euro,
+                "cost_cents": self.cost_cents}
         
