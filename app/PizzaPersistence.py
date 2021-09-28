@@ -1,3 +1,4 @@
+from entities.DeliveryDriver import DeliveryDriver
 from entities.Pizza import Pizza
 from entities.Dessert import Dessert
 from entities.Drink import Drink
@@ -18,7 +19,7 @@ config = {  'user': 'root',
 # Local test config
 config = {'user': 'root',
           'password': 'password',
-          'host': '127.0.0.1',
+          'host': 'localhost',
           'port': '3306',
           'database': 'pizzas'
           }
@@ -95,6 +96,14 @@ def get_purchase(purchase_id):
 def get_delivery_driver(purchase_id):
     return None
 
+def get_delivery_driver(id):
+    query = ("SELECT driver_id, operating_area, on_task, name FROM DeliveryDriver WHERE driver_id = 1;")
+    cursor.execute(query)
+    result = cursor.fetchone()
+    return DeliveryDriver(result[0], result[1], result[2], result[3])
+
+def set_delivery_driver_status(DeliveryDriver, status):
+    return None
 
 # Main function to test query methods
 if __name__ == '__main__':
@@ -111,7 +120,13 @@ if __name__ == '__main__':
     for dessert in get_all_desserts():
         print(dessert.dessert_id, dessert.name)
 
-    test_purchase = Purchase()
+    print("---")
+
+    # create example entities
+    test_driver = get_delivery_driver(1)
+    print(test_driver.name, test_driver.operating_area)
+
+    # test_purchase = Purchase()
 
     # test_customer = Customer(1, )
 
