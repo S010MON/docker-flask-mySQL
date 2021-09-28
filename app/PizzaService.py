@@ -1,6 +1,8 @@
 import os
 import json
 import PizzaController as controller
+from entities.Customer import Customer as Customer_object
+from entities.Address import Address
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
 
@@ -55,20 +57,29 @@ class Customer(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('customer_id', type=int)
+        parser.add_argument('name', type=str)
         parser.add_argument('street', type=str)
         parser.add_argument('town', type=str)
         parser.add_argument('postcode', type=str)
+        parser.add_argument('phone', type=str)
         args = parser.parse_args()
-        customer = Customer(args['customer_id'],
-                            args['street'],
-                            args['town'],
-                            args['postcode'])
+
+        address = Address(args['street'],
+                          args['town'],
+                          args['postcode'])
         
-        return jsonify( message="customer added",
-                        category="success",
-                        data=data,
-                        status=200)
+
+        customer = Customer_object(args['name'],
+                                     address,
+                                     args['phone'])
+        data = controller.post_customer(customer)
+        if data == None:
+            return failed_404('customer not added')
+        else:
+            return jsonify( message="customer added",
+                            category="success",
+                            data=data,
+                            status=200)
 
 class Purchase(Resource):
     def get(self):

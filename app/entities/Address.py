@@ -1,3 +1,5 @@
+import json
+
 class Address:
 
     def __init__(self, address_id, street, town, postcode):
@@ -13,8 +15,8 @@ class Address:
         self.postcode = postcode
 
     def to_dict(self):
-        return {"address_id": self.address,
+        return {"address_id": self.address_id,
                 "street": self.street,
                 "town": self.town,
                 "postcode": self.postcode}
-      
+    

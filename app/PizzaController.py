@@ -33,10 +33,11 @@ def get_customer_by_id(customer_id):
     return None
 
 def post_customer(customer):
-    
-    return True
+    db.create_address(customer.address)
+    data = db.create_customer(customer)
+    return data
 
 def post_purchase(purchase):
-    
+    data = db.create_purchase(purchase)
     return True
-
+    
