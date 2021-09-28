@@ -80,14 +80,15 @@ def get_all_drinks():
 def create_purchase(Purchase):
     return None
 
-def get_address(id):
-    return None
-
 def get_address_id(address):
     return None
 
 def get_customer(id):
-    return None
+    query = ("SELECT customer_id, name, address_id, phone_number FROM Customer WHERE customer_id = %s")
+    cursor.execute(query, (id,))
+    result = cursor.fetchone()
+    customer_address = get_address(result[2])
+    return Customer(result[0], result[1], customer_address, result[3])
 
 def create_customer(customer):
     query = ("INSERT INTO Customer (name, address_id, phone_number)"
@@ -120,6 +121,12 @@ def get_delivery_driver(id):
 
 def set_delivery_driver_status(DeliveryDriver, status):
     return None
+
+def get_address(id):
+    query = ("SELECT address_id. street, town, postcode FROM Address WHERE address_id = %s;")
+    cursor.execute(query, (id,))
+    result = cursor.fetchone()
+    return Address(result[0], result[1], result[2], result[3])
 
 def set_address(address):
     query = ("INSERT INTO Address (street, town, postcode)"
@@ -161,6 +168,6 @@ if __name__ == '__main__':
 
     test_customer = Customer("Leon", test_address, "+49 123456789")
     create_customer(test_customer)
-    print(test_customer.customer_id, test_customer.name)
+    print(test_customer.customer_id, test_customer.name, test_customer.address.town)
 
     # get_customer_address()
