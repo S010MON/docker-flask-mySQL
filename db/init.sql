@@ -6,7 +6,7 @@ DROP DATABASE IF EXISTS pizzas;
 CREATE DATABASE pizzas;
 USE pizzas;
 
--- Create pizzza table
+-- Create pizza table
 CREATE TABLE Pizza (
     pizza_id INT NOT NULL AUTO_INCREMENT,
     pizza_name VARCHAR(255) NOT NULL,

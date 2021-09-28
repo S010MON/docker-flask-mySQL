@@ -29,7 +29,7 @@ class Drink(Resource):
 class Dessert(Resource):
     def get(self):
         data = PizzaController.get_all_desserts()
-        return jsonify( message="test message",
+        return jsonify( message="Sweet Sweets!",
                         category="success",
                         data=data,
                         status=200)
