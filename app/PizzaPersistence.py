@@ -97,8 +97,8 @@ def get_delivery_driver(purchase_id):
     return None
 
 def get_delivery_driver(id):
-    query = ("SELECT driver_id, operating_area, on_task, name FROM DeliveryDriver WHERE driver_id = 1;")
-    cursor.execute(query)
+    query = ("SELECT driver_id, operating_area, on_task, name FROM DeliveryDriver WHERE driver_id = %s;")
+    cursor.execute(query, (id,))
     result = cursor.fetchone()
     return DeliveryDriver(result[0], result[1], result[2], result[3])
 
