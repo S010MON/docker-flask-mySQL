@@ -1,3 +1,4 @@
+from entities.Address import Address
 from entities.DeliveryDriver import DeliveryDriver
 from entities.Pizza import Pizza
 from entities.Dessert import Dessert
@@ -105,6 +106,17 @@ def get_delivery_driver(id):
 def set_delivery_driver_status(DeliveryDriver, status):
     return None
 
+def set_address(address):
+    query = ("INSERT INTO address (street, town, postcode)"
+             "VALUES (%s, %s, %s);")
+
+    query_data = (address.street, address.town, address.postcode)
+    cursor.execute(query, query_data)
+    current_id = cursor.lastrowid
+    address.address_id = current_id
+    cnx.commit()
+
+
 # Main function to test query methods
 if __name__ == '__main__':
     for pizza in get_all_pizzas():
@@ -126,8 +138,12 @@ if __name__ == '__main__':
     test_driver = get_delivery_driver(1)
     print(test_driver.name, test_driver.operating_area)
 
-    # test_purchase = Purchase()
+    print("---")
 
-    # test_customer = Customer(1, )
+    test_address = Address("Dampstraat", "Maastricht", "6226GJ")
+    set_address(test_address)
+    print(test_address.address_id, test_address.town)
+
+    #test_customer = Customer("Leon", )
 
     # get_customer_address()

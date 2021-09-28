@@ -6,3 +6,8 @@ class Customer:
         self.address = address
         self.phone = phone
 
+    def __init__(self, name, address, phone):
+        self.customer_id = None
+        self.name = name
+        self.address = address
+        self.phone = phone
