@@ -16,4 +16,4 @@ class Customer:
         return {"customer_id": self.customer_id,
                 "name": self.name, 
                 "address": self.address.to_dict, 
-                "phone" self.phone}
+                "phone": self.phone}

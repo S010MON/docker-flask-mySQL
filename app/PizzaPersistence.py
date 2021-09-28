@@ -7,7 +7,6 @@ from mysql.connector import (connection)
 
 import mysql.connector
 
-'''
 # Docker config
 config = {  'user': 'root',
             'password': 'password',
@@ -24,6 +23,7 @@ config = {'user': 'root',
           'port': '3306',
           'database': 'pizzas'
           }
+'''
 
 cnx = mysql.connector.connect(**config)
 
