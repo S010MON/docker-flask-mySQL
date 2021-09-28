@@ -1,5 +1,3 @@
-from flask import jsonify
-
 class Pizza:
 
     def __init__(self, pizza_id, name, cost_euro, cost_cents, toppings):
