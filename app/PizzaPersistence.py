@@ -1,3 +1,4 @@
+from entities.Purchase import Purchase
 from entities.Address import Address
 from entities.DeliveryDriver import DeliveryDriver
 from entities.Pizza import Pizza
@@ -49,6 +50,31 @@ def get_all_pizzas():
     return allPizzas
 
 
+def get_pizza(current_pizza_id):
+    query = ("SELECT Pizza.pizza_id, "
+             "Pizza.pizza_name, "
+             "Pizza.pizza_price_euros, "
+             "Pizza.pizza_price_cents, "
+             "Topping.topping_name FROM Pizza "
+             "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
+             "INNER JOIN Topping on ToppingMapping.topping_id = Topping.topping_id"
+             "WHERE Pizza.pizza_id = 2;")
+    cursor.execute(query, (current_pizza_id,))
+    # The following algorithm makes sure, that all the toppings from a many-to-many relation
+    # are geting mapped to the corresponding pizza
+    result_pizza = None
+    for (pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, topping_name) in cursor:
+        already_exists = False
+        for check_pizza in result_pizza:
+            if check_pizza.pizza_id == pizza_id:
+                pointer = check_pizza
+                already_exists = True
+        if already_exists:
+            pointer.toppings.append(topping_name)
+        else:
+            result_pizza = Pizza(pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, [topping_name])  # add toppings
+    return result_pizza
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_desserts():
@@ -98,17 +124,46 @@ def get_customer(id):
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_purchase(purchase):
-    return None
+    query = ("INSERT INTO Purchase (purchased_at, customer_id, delivery_driver_id) VALUES (NOW(), %s, %s);")
+    cursor.execute(query, (purchase.customer_id, purchase.delivery_driver_id))
+    purchase_id = cursor.lastrowid
+    purchase.purchase_id = purchase_id
+
+    for current_pizza in purchase.pizzas:
+        query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id) VALUES (%s, %s);")
+        cursor.execute(query, (purchase_id, current_pizza.pizza_id))
+
+    for current_drink in purchase.drinks:
+        query = ("INSERT INTO DrinkMapping (purchase_id, drink_id) VALUES (%s, %s);")
+        cursor.execute(query, (purchase_id, current_drink.drink_id))
+
+    for current_dessert in purchase.desserts:
+        query = ("INSERT INTO PizzaMapping (purchase_id, dessert_id) VALUES (%s, %s);")
+        cursor.execute(query, (purchase_id, current_dessert.dessert_id))
+
+    cnx.commit()
+    return purchase
 
 
 def get_purchase(purchase_id):
-    return None
+    query = ("SELECT purchase_id, purchased_at, customer_id, delivery_driver_id FROM Purchase WHERE purchase_id = %s;")
+    cursor.execute(query, (purchase_id,))
+    result = cursor.fetchone()
+    new_purchase = Purchase(result[0], result[1], result[2], result[3], [], [], [])
 
+
+
+    return new_purchase
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-def get_delivery_driver(purchase_id):
-    return None
+def get_delivery_drivers(area):
+    delivery_drivers = []
+    query = ("SELECT driver_id, operating_area, on_task, name FROM DeliveryDriver WHERE operating_area = %s;")
+    cursor.execute(query, (area,))
+    for (driver_id, operating_area, on_task, name) in cursor:
+        delivery_drivers.append(DeliveryDriver(driver_id, operating_area, on_task, name))
+    return delivery_drivers
 
 
 def get_delivery_driver(id):
@@ -120,7 +175,6 @@ def get_delivery_driver(id):
 
 def update_delivery_driver_status(DeliveryDriver, status):
     return None
-
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -176,4 +230,9 @@ if __name__ == '__main__':
     create_customer(test_customer)
     print(test_customer.customer_id, test_customer.name, test_customer.address.town)
 
-    # get_customer_address()
+    print("---")
+
+    sample_pizza = get_pizza(3)
+    print(sample_pizza.name, sample_pizza.toppings)
+
+    # test_purchase = Purchase()
