@@ -34,7 +34,7 @@ def get_customer_by_id(customer_id):
 
 def post_customer(customer):
     db.create_address(customer.address)
-    data = db.create_customer(customer)
+    data = db.create_customer(customer).to_dict()
     return data
 
 def post_purchase(purchase):
