@@ -1,5 +1,6 @@
 import os
 import json
+from flask_cors import CORS
 import PizzaController as controller
 from entities.Customer import Customer as Customer_object
 from entities.Address import Address
@@ -8,6 +9,7 @@ from flask_restful import Resource, Api, reqparse
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
 '''
 Pizza Service
@@ -17,7 +19,7 @@ Pizza Service
 
 class Home(Resource):
     def get(self):
-        return {"Connected to":"Pizza Maastricht"}, 200
+        return {"message":"Welcome to Pizza Maastricht"}, 200
 
 class Pizza(Resource):
     def get(self):
