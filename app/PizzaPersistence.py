@@ -130,7 +130,7 @@ def get_customer(id):
     return Customer(result[0], result[1], customer_address, result[3])
 
 def customer_exists(customer):
-    query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone = %s;")
+    query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone_number = %s;")
     cursor.execute(query, (customer.name, customer.phone))
     row_number = cursor.fetchall()
     results = len(row_number)
@@ -168,10 +168,10 @@ def get_purchase(purchase_id):
     query = ("SELECT purchase_id, purchased_at, customer_id, delivery_driver_id FROM Purchase WHERE purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
-    new_purchase = Purchase(result[0], result[1], result[2], result[3], [], [], [])
-
-
-
+    new_purchase = Purchase(result[0], [], [], [])
+    new_purchase.datetime = result[1]
+    new_purchase.customer_id = result[2]
+    new_purchase.delivery_driver_id = result[3]
     return new_purchase
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -195,7 +195,6 @@ def get_delivery_driver(id):
 def update_delivery_driver(delivery_driver, status):
     query = ("UPDATE DeliveryDriver SET on_task = %s WHERE driver_id = %s")
     cursor.execute(query, (status, delivery_driver.driver_id))
-    result = cursor.fetchone()
     new_delivery_driver = DeliveryDriver(delivery_driver.driver_id, delivery_driver.operating_area, status, delivery_driver.name)
     cnx.commit()
     return new_delivery_driver
