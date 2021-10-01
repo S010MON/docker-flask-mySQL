@@ -80,7 +80,15 @@ class Customer(Resource):
                                    address,
                                    args['phone_number'])
         data = controller.post_customer(customer)
-        return jsonify( message="customer added",
+        if data == None:
+            return jsonify( message="customer already exists",
+                            category="success",
+                            data=data,
+                            status=201)
+
+
+        else:
+            return jsonify( message="customer added",
                             category="success",
                             data=data,
                             status=201)
