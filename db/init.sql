@@ -126,7 +126,7 @@ INSERT INTO Topping (topping_name, vegetarian) VALUES ("Salami", FALSE); -- 8
 INSERT INTO Topping (topping_name, vegetarian) VALUES ("Blue Pills", TRUE); -- 9
 INSERT INTO Topping (topping_name, vegetarian) VALUES ("Mozzarella", TRUE); -- 10
 INSERT INTO Topping (topping_name, vegetarian) VALUES ("Basil", TRUE); -- 11
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Pepperoni", TRUE); -- 12
+INSERT INTO Topping (topping_name, vegetarian) VALUES ("Pepperoni", FALSE); -- 12
 
 -- Map toppings to pizza
 INSERT INTO ToppingMapping(pizza_id, topping_id) VALUES (1, 1); -- Margherita, Cheese
