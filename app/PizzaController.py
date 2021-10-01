@@ -11,10 +11,17 @@ Pizza Controller
 
 def get_all_pizzas():
     pizzas = db.get_all_pizzas()
+    if pizzas == None:
+        return not_found_404()
+
     data = []
     for i in range(0, len(pizzas)):
         data.append(pizzas[i].to_dict())
-    return data
+    
+    return jsonify( message="test message",
+                    category="success",
+                    data=data,
+                    status=200)
 
 def get_all_drinks():
     drinks = db.get_all_drinks()

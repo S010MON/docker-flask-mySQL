@@ -24,14 +24,8 @@ class Home(Resource):
 
 class Pizza(Resource):
     def get(self):
-        data = controller.get_all_pizzas()
-        if data == None:
-            return not_found_404()
-        else:
-            return jsonify( message="test message",
-                            category="success",
-                            data=data,
-                            status=200)
+        response = controller.get_all_pizzas()
+        return response
 
 class Drink(Resource):
     def get(self):
