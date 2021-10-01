@@ -51,7 +51,7 @@ def get_all_pizzas():
                 pointer.vegetarian = False
         else:
             allPizzas.append(
-                Pizza(pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, [topping_name], bool(vegetarian)))  # add toppings
+                Pizza(pizza_id, pizza_name, pizza_price_euros, [topping_name], bool(vegetarian)))  # add toppings
     return allPizzas
 
 
@@ -77,7 +77,7 @@ def get_pizza(current_pizza_id):
         if already_exists:
             pointer.toppings.append(topping_name)
         else:
-            result_pizza = Pizza(pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, [topping_name])  # add toppings
+            result_pizza = Pizza(pizza_id, pizza_name, pizza_price_euros, [topping_name])  # add toppings
     return result_pizza
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -88,7 +88,7 @@ def get_all_desserts():
     cursor.execute(query)
     allDeserts = []
     for (dessert_id, dessert_name, dessert_price_euros, dessert_price_cents) in cursor:
-        allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price_euros, dessert_price_cents))  # add toppings
+        allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price_euros))  # add toppings
     return allDeserts
 
 
@@ -100,7 +100,7 @@ def get_all_drinks():
     cursor.execute(query)
     allDrinks = []
     for (drink_id, drink_name, drink_price_euros, drink_price_cents) in cursor:
-        allDrinks.append(Drink(drink_id, drink_name, drink_price_euros, drink_price_cents))  # add toppings
+        allDrinks.append(Drink(drink_id, drink_name, drink_price_euros))  # add toppings
     return allDrinks
 
 
