@@ -10,7 +10,6 @@ Pizza Controller
 '''
 
 
-
 def get_all_pizzas():
     pizzas = db.get_all_pizzas()
     if pizzas is None:
@@ -75,8 +74,8 @@ def get_purchase_by_id(purchase_id):
 def post_customer(customer):
     if db.customer_exists(customer):
         return jsonify(message="customer already exists",
-                       category="success",
-                       status=201)
+                       category="failed",
+                       status=400)
     else:
         customer.address = db.create_address(customer.address)
         data = db.create_customer(customer).to_dict()
@@ -97,7 +96,7 @@ def post_purchase(purchase):
     return jsonify(message="pizzas",
                    category="success",
                    data=data,
-                   status=200)
+                   status=201)
 
 
 def delete_purchase(purchase_id):
@@ -124,7 +123,14 @@ def delete_purchase(purchase_id):
 
 def update_orders():
     # TODO - run update on all current orders
+    # undelivered_purchases = db.get_all_undelivered_purchases()
+    # for purchase in undelivered_purchases:
+    #    dispatch_time = purchase.datetime + timedelta(minutes=5)
+    #    if dispatch_time > datetime.now():
+    #        driver =
+    #        db.update_order_dispatched(purchase.purchase_id, datetime.now())
     print('Orders updated', flush=True)
+
 
 def not_found_404():
     return jsonify(message="Not found",
