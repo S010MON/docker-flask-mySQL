@@ -174,6 +174,14 @@ def get_purchase(purchase_id):
     new_purchase.delivery_driver_id = result[3]
     return new_purchase
 
+
+def delete_purchase(purchase_id):
+    deleted_order = get_purchase(purchase_id)
+    query = ("DELETE FROM Purchase WHERE purchase_id = %s;")
+    cursor.execute(query, (purchase_id,))
+    cnx.commit()
+    return deleted_order
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_delivery_drivers(area):
