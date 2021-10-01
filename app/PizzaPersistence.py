@@ -140,16 +140,16 @@ def create_purchase(purchase):
     new_purchase.purchase_id = purchase_id
 
     for current_pizza in purchase.pizzas:
-        query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id) VALUES (%s, %s);")
-        cursor.execute(query, (purchase_id, current_pizza.pizza_id))
+        query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id, quantity) VALUES (%s, %s, %s);")
+        cursor.execute(query, (purchase_id, current_pizza['pizza_id'], purchase.pizzas['quantity']))
 
     for current_drink in purchase.drinks:
-        query = ("INSERT INTO DrinkMapping (purchase_id, drink_id) VALUES (%s, %s);")
-        cursor.execute(query, (purchase_id, current_drink.drink_id))
+        query = ("INSERT INTO DrinkMapping (purchase_id, drink_id, quantity) VALUES (%s, %s, %s);")
+        cursor.execute(query, (purchase_id, current_drink['drink_id'], purchase.drinks['quantity']))
 
     for current_dessert in purchase.desserts:
-        query = ("INSERT INTO DessertMapping (purchase_id, dessert_id) VALUES (%s, %s);")
-        cursor.execute(query, (purchase_id, current_dessert.dessert_id))
+        query = ("INSERT INTO DessertMapping (purchase_id, dessert_id, quantity) VALUES (%s, %s, %s);")
+        cursor.execute(query, (purchase_id, current_dessert['dessert_id'], purchase.desserts['quantity']))
 
     cnx.commit()
     return new_purchase
