@@ -1,14 +1,12 @@
 class Drink:
 
-    def __init__(self, drink_id, name, cost_euro, cost_cents):
+    def __init__(self, drink_id, name, cost):
         self.drink_id = drink_id
         self.name = name
-        self.cost_euro = cost_euro
-        self.cost_cents = cost_cents
+        self.cost = costo
 
     def to_dict(self):
         return {"drink_id": self.drink_id,
                 "name": self.name,
-                "cost_euro": self.cost_euro,
-                "cost_cents": self.cost_cents}
+                "cost": self.cost,
         
