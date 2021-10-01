@@ -129,6 +129,15 @@ def get_customer(id):
     customer_address = get_address(result[2])
     return Customer(result[0], result[1], customer_address, result[3])
 
+def customer_exists(customer):
+    query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone = %s;")
+    cursor.execute(query, (customer.name, customer.phone))
+    row_number = cursor.fetchall()
+    results = len(row_number)
+    if results > 0:
+        return True
+    else:
+        return False
 
 # ----------------------------------------------------------------------------------------------------------------------
 
