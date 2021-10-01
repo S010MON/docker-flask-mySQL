@@ -113,11 +113,10 @@ class Purchase(Resource):
         args = parser.parse_args()
         
         purchase = Purchase_object(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'])
-        
-        
+        data = controller.post_purchase(purchase) 
         return jsonify( message="pizzas",
                         category="success",
-                        data=args['desserts'],
+                        data=data,
                         status=200)
 
 def not_found_404():
