@@ -98,16 +98,8 @@ class Purchase(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('purchase_id', type=int)
         args = parser.parse_args()
-        data = controller.get_purchase_by_id(args['purchase_id'])
-        if data == None:
-            return not_found_404()
-        if type(data) != dict:
-            return
-        else:
-            return jsonify( message="purchase",
-                            category="success",
-                            data=data,
-                            status=200)
+        response = controller.get_purchase_by_id(args['purchase_id'])
+        return response
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -118,11 +110,15 @@ class Purchase(Resource):
         args = parser.parse_args()
         
         purchase = Purchase_object(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'])
-        data = controller.post_purchase(purchase) 
-        return jsonify( message="pizzas",
-                        category="success",
-                        data=data,
-                        status=200)
+        response = controller.post_purchase(purchase) 
+        return response
+
+    def delete(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('purchase_id', type=int)
+        args = parser.parse_args()
+        response = controller.delete_purchase(args['purchase_id'])
+        return response
 
 def not_found_404():
     return jsonify( message="Not found",
