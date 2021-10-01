@@ -1,4 +1,3 @@
-import apscheduler
 from flask import jsonify
 from datetime import datetime, timedelta
 import PizzaPersistence as db

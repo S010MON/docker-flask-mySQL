@@ -94,7 +94,7 @@ class Purchase(Resource):
         return response
 
 
-@scheduler.task('interval', id='update_orders', minutes=1, misfire_grace_time=30)
+@scheduler.task('interval', id='update_orders', minutes=5, misfire_grace_time=30)
 def update_orders():
     ctrlr.update_orders()
 
