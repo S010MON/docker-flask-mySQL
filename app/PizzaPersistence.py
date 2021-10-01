@@ -146,6 +146,10 @@ def create_purchase(purchase):
     cursor.execute(query, (purchase.customer_id,))
     purchase_id = cursor.lastrowid
     new_purchase = copy.deepcopy(purchase)
+    query = ("SELECT purchased_at FROM Purchase WHERE purchase_id = %s")
+    cursor.execute(query, (purchase_id,))
+    result = cursor.fetchone()
+    new_purchase.datetime = result[0]
     new_purchase.purchase_id = purchase_id
 
     for current_pizza in purchase.pizzas:
@@ -172,8 +176,30 @@ def get_purchase(purchase_id):
     new_purchase.datetime = result[1]
     new_purchase.purchase_id = purchase_id
     new_purchase.delivery_driver_id = result[3]
-    return new_purchase
+    # Query pizzas
+    query = ("SELECT PizzaMapping.pizza_id, PizzaMapping.quantity FROM Purchase "
+             "JOIN PizzaMapping ON Purchase.purchase_id = PizzaMapping.purchase_id WHERE Purchase.purchase_id = %s;")
+    cursor.execute(query, (purchase_id,))
+    for (pizza_id, quantity) in cursor:
+        new_purchase.pizzas.append({"pizza_id": pizza_id,
+                                    "quantity": quantity})
+    # Query drinks
+    query = ("SELECT DrinkMapping.drink_id, DrinkMapping.quantity FROM Purchase "
+             "JOIN DrinkMapping ON Purchase.purchase_id = DrinkMapping.purchase_id WHERE Purchase.purchase_id = %s;")
+    cursor.execute(query, (purchase_id,))
+    for (drink_id, quantity) in cursor:
+        new_purchase.drinks.append({"drink_id": drink_id,
+                                    "quantity": quantity})
 
+    #Query desserts
+    query = ("SELECT DessertMapping.dessert_id, DessertMapping.quantity FROM Purchase "
+             "JOIN DessertMapping ON Purchase.purchase_id = DessertMapping.purchase_id WHERE Purchase.purchase_id = %s;")
+    cursor.execute(query, (purchase_id,))
+    for (dessert_id, quantity) in cursor:
+        new_purchase.desserts.append({"dessert_id": dessert_id,
+                                    "quantity": quantity})
+
+    return new_purchase
 
 def delete_purchase(purchase_id):
     deleted_order = get_purchase(purchase_id)
