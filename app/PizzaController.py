@@ -1,4 +1,5 @@
 from flask import jsonify
+from datetime import datetime, timedelta
 import json
 import PizzaPersistence as db
 
@@ -68,17 +69,24 @@ def post_purchase(purchase):
                     status=200)
 
 def delete_purchase(purchase_id):
-    if db.get_purchase(purchase_id) == None:
+    purchase = db.get_purchase(purchase_id)
+    if purchase == None:
         return jsonify( message="Order does not exist",
                         category="failed",
                         data=None,
                         status=404)
-    else:
-        data = db.delete_purchase(purchase_id).to_dict()
-        return jsonify( message="Order Deleted",
-                        category="success",
-                        data=data,
-                        status=200)
+    
+    last_minute = purchase.datetime + timedelta(minutes=5)
+    if datetime.now() > last_minute:
+        return jsonify( message="Cannot Cancel Order",
+                        category="failed",
+                        data=purchase.to_dict(),
+                        status=400)
+    data = db.delete_purchase(purchase_id).to_dict()
+    return jsonify( message="Order Deleted",
+                    category="success",
+                    data=purchase.to_dict(),
+                    status=200)
 
 def not_found_404():
     return jsonify( message="Not found",
