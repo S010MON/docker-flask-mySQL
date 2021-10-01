@@ -21,7 +21,7 @@ class Purchase:
     def to_dict(self):
         pizzas_list = []
         for pizza in self.pizzas:
-            pizzas_list.append(pizza.to_dict())
+            pizzas_list.append(pizzas.to_dict())
         
         drinks_list = []
         for drink in self.drinks:
@@ -34,7 +34,7 @@ class Purchase:
         return{"purchase_id": self.purchase_id,
                 "datetime": self.datetime,
                 "customer": self.customer_id,
-                "pizzas": pizzas_list,
-                "drinks": drinks_list,
-                "desserts": desserts_list,
+                "pizzas": pizzas,
+                "drinks": drinks,
+                "desserts": desserts,
                 "delivery_driver_id": self.delivery_driver_id}

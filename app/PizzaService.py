@@ -3,6 +3,7 @@ import json
 from flask_cors import CORS
 import PizzaController as controller
 from entities.Customer import Customer as Customer_object
+from entities.Purchase import Purchase as Purchase_object
 from entities.Address import Address
 from flask import Flask, jsonify, request
 from flask_restful import Resource, Api, reqparse
@@ -105,12 +106,17 @@ class Purchase(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('', type=int)
-        parser.add_argument('', type=str)
-        parser.add_argument('', type=str)
-        parser.add_argument('', type=str)
+        parser.add_argument('customer_id', type=int)
+        parser.add_argument('pizzas', type=dict)
+        parser.add_argument('drinks', type=dict)
+        parser.add_argument('desserts', type=dict)
         args = parser.parse_args()
-        return {"not yet implemented":"true"},404
+       # data = controller.post_purchase(purchase)
+        data = args['pizzas']
+        return jsonify( message="pizzas",
+                        category="success",
+                        data=data,
+                        status=200)
 
 def not_found_404():
     return jsonify( message="Not found",
