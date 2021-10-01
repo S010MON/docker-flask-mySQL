@@ -1,6 +1,8 @@
+import sys
 from flask_cors import CORS
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
+from flask_apscheduler import APScheduler
 import PizzaController as ctrlr
 from entities.Customer import Customer as Customer_obj
 from entities.Purchase import Purchase as Purchase_obj
@@ -9,6 +11,10 @@ from entities.Address import Address
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
+scheduler = APScheduler()
+scheduler.init_app(app)
+scheduler.start()
+
 
 '''
 Pizza Service
@@ -86,6 +92,11 @@ class Purchase(Resource):
 
         response = ctrlr.delete_purchase(args['purchase_id'])
         return response
+
+
+@scheduler.task('interval', id='update_orders', minutes=1, misfire_grace_time=30)
+def update_orders():
+    ctrlr.update_orders()
 
 
 api.add_resource(Home, '/')

@@ -1,3 +1,4 @@
+import apscheduler
 from flask import jsonify
 from datetime import datetime, timedelta
 import PizzaPersistence as db
@@ -8,6 +9,7 @@ Pizza Controller
 - Error Management
 - JSON serialisation
 '''
+
 
 
 def get_all_pizzas():
@@ -58,10 +60,6 @@ def get_all_desserts():
 def get_customer_by_id(customer_id):
     data = db.get_customer(customer_id).to_dict()
     return data
-
-
-def get_delivery_driver_by_id(driver_id):
-    return None
 
 
 def get_purchase_by_id(purchase_id):
@@ -124,6 +122,10 @@ def delete_purchase(purchase_id):
                        data=purchase.to_dict(),
                        status=200)
 
+
+def update_orders():
+    # TODO - run update on all current orders
+    print('Orders updated', flush=True)
 
 def not_found_404():
     return jsonify(message="Not found",
