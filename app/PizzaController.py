@@ -41,8 +41,11 @@ def get_purchase_by_id(purchase_id):
     return data
 
 def post_customer(customer):
-    db.create_address(customer.address)
-    data = db.create_customer(customer).to_dict()
+    if db.customer_exists(customer):
+        return None
+    else:
+        db.create_address(customer.address)
+        data = db.create_customer(customer).to_dict()
     return data
 
 def post_purchase(purchase):
