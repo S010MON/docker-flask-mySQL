@@ -168,9 +168,9 @@ def get_purchase(purchase_id):
     query = ("SELECT purchase_id, purchased_at, customer_id, delivery_driver_id FROM Purchase WHERE purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
-    new_purchase = Purchase(result[0], [], [], [])
+    new_purchase = Purchase(result[2], [], [], [])
     new_purchase.datetime = result[1]
-    new_purchase.customer_id = result[2]
+    new_purchase.purchase_id = purchase_id
     new_purchase.delivery_driver_id = result[3]
     return new_purchase
 
