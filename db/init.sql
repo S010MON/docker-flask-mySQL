@@ -34,7 +34,7 @@ CREATE TABLE PizzaMapping (
 
 CREATE TABLE DrinkMapping (
     drink_map_id INT NOT NULL AUTO_INCREMENT,
-    order_id INT NOT NULL,
+    drink_id INT NOT NULL,
     purchase_id INT NOT NULL,
     quantity INT NOT NULL,
     PRIMARY KEY (drink_map_id));
