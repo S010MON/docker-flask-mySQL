@@ -118,11 +118,24 @@ class Purchase(Resource):
         args = parser.parse_args()
         
         purchase = Purchase_object(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'])
+        if purchase.pizzas == None:
+             return jsonify( message="order must contain a pizza",
+                        category="failed",
+                        data=None,
+                        status=400)
+
         data = controller.post_purchase(purchase) 
         return jsonify( message="pizzas",
                         category="success",
                         data=data,
                         status=200)
+
+    def delete(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('purchase_id', type=int)
+        args = parser.parse_args()
+        response = controller.delete_purchase(args['purchase_id'])
+        return response
 
 def not_found_404():
     return jsonify( message="Not found",
