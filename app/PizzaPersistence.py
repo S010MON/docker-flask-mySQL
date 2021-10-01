@@ -183,8 +183,13 @@ def get_delivery_driver(id):
     return DeliveryDriver(result[0], result[1], result[2], result[3])
 
 
-def update_delivery_driver_status(DeliveryDriver, status):
-    return None
+def update_delivery_driver(delivery_driver, status):
+    query = ("UPDATE DeliveryDriver SET on_task = %s WHERE driver_id = %s")
+    cursor.execute(query, (status, delivery_driver.driver_id))
+    result = cursor.fetchone()
+    new_delivery_driver = DeliveryDriver(delivery_driver.driver_id, delivery_driver.operating_area, status, delivery_driver.name)
+    cnx.commit()
+    return new_delivery_driver
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -247,4 +252,5 @@ if __name__ == '__main__':
     #print(sample_pizza.name, sample_pizza.toppings)
 
     tp = Purchase(1, [], [], [])
+    new_test_driver = update_delivery_driver(test_driver, True)
     # test_purchase = Purchase()
