@@ -44,9 +44,9 @@ def post_customer(customer):
     if db.customer_exists(customer):
         return None
     else:
-        db.create_address(customer.address)
+        customer.address = db.create_address(customer.address)
         data = db.create_customer(customer).to_dict()
-    return data
+    return customer.to_dict()
 
 def post_purchase(purchase):
     data = db.create_purchase(purchase).to_dict()

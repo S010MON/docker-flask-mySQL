@@ -64,11 +64,11 @@ class Customer(Resource):
 
     def post(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str)
+        parser.add_argument('customer_name', type=str)
         parser.add_argument('street', type=str)
         parser.add_argument('town', type=str)
         parser.add_argument('postcode', type=str)
-        parser.add_argument('phone', type=str)
+        parser.add_argument('phone_number', type=str)
         args = parser.parse_args()
 
         address = Address(args['street'],
@@ -76,14 +76,11 @@ class Customer(Resource):
                           args['postcode'])
         
 
-        customer = Customer_object(args['name'],
-                                     address,
-                                     args['phone'])
+        customer = Customer_object(args['customer_name'],
+                                   address,
+                                   args['phone_number'])
         data = controller.post_customer(customer)
-        if data == None:
-            return not_found_404()
-        else:
-            return jsonify( message="customer added",
+        return jsonify( message="customer added",
                             category="success",
                             data=data,
                             status=201)
