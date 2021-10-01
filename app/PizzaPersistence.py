@@ -31,14 +31,15 @@ def get_all_pizzas():
              "Pizza.pizza_name, "
              "Pizza.pizza_price_euros, "
              "Pizza.pizza_price_cents, "
-             "Topping.topping_name FROM Pizza "
+             "Topping.topping_name,"
+             "Topping.vegetarian FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
              "INNER JOIN Topping on ToppingMapping.topping_id = Topping.topping_id;")
     cursor.execute(query)
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
     # are geting mapped to the corresponding pizza
     allPizzas = []
-    for (pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, topping_name) in cursor:
+    for (pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, topping_name, vegetarian) in cursor:
         already_exists = False
         for check_pizza in allPizzas:
             if check_pizza.pizza_id == pizza_id:
@@ -46,9 +47,11 @@ def get_all_pizzas():
                 already_exists = True
         if already_exists:
             pointer.toppings.append(topping_name)
+            if vegetarian == False:
+                pointer.vegetarian = False
         else:
             allPizzas.append(
-                Pizza(pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, [topping_name]))  # add toppings
+                Pizza(pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, [topping_name], bool(vegetarian)))  # add toppings
     return allPizzas
 
 
@@ -210,7 +213,7 @@ def get_address(id):
 # Main function to test query methods
 if __name__ == '__main__':
     for pizza in get_all_pizzas():
-        print(pizza.pizza_id, pizza.name, pizza.toppings)
+        print(pizza.pizza_id, pizza.name, pizza.toppings, pizza.vegetarian)
 
     print("---")
 
