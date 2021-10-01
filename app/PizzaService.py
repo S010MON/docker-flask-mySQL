@@ -1,5 +1,6 @@
 import os
 import json
+from flask_cors import CORS
 import PizzaController as controller
 from entities.Customer import Customer as Customer_object
 from entities.Address import Address
@@ -8,18 +9,23 @@ from flask_restful import Resource, Api, reqparse
 
 app = Flask(__name__)
 api = Api(app)
+CORS(app)
 
-# Pizza Service
+'''
+Pizza Service
+- API endpoints
+- 
+'''
 
 class Home(Resource):
     def get(self):
-        return {"Connected to":"Pizza Maastricht"}, 200
+        return {"message":"Welcome to Pizza Maastricht"}, 200
 
 class Pizza(Resource):
     def get(self):
         data = controller.get_all_pizzas()
         if data == None:
-            return failed_404("Pizzas not found")
+            return not_found_404()
         else:
             return jsonify( message="test message",
                             category="success",
@@ -30,7 +36,7 @@ class Drink(Resource):
     def get(self):
         data = controller.get_all_drinks()
         if data == None:
-            return failed_404("Drinks not found")
+            return not_found_404()
         else:
             return jsonify( message="test message",
                             category="success",
@@ -41,7 +47,7 @@ class Dessert(Resource):
     def get(self):
         data = controller.get_all_desserts()
         if data == None:
-            return failed_404("Desserts not found")
+            return not_found_404()
         else:
             return jsonify( message="Sweet Sweets!",
                             category="success",
@@ -74,12 +80,12 @@ class Customer(Resource):
                                      args['phone'])
         data = controller.post_customer(customer)
         if data == None:
-            return failed_404('customer not added')
+            return not_found_404()
         else:
             return jsonify( message="customer added",
                             category="success",
                             data=data,
-                            status=200)
+                            status=201)
 
 class Purchase(Resource):
     def get(self):
@@ -88,7 +94,9 @@ class Purchase(Resource):
         args = parser.parse_args()
         data = controller.get_purchase_by_id(args['purchase_id'])
         if data == None:
-            return failed_404("purchase not found")
+            return not_found_404()
+        if type(data) != dict:
+            return
         else:
             return jsonify( message="purchase",
                             category="success",
@@ -104,10 +112,13 @@ class Purchase(Resource):
         args = parser.parse_args()
         return {"not yet implemented":"true"},404
 
-def failed_404(message):
-    return jsonify( message=message,
-                    category="failed",
+def not_found_404():
+    return jsonify( message="Not found",
                     status=404)
+
+def not_implemented_501():
+    return jsonify( message='Not yet implemented',
+                    status=501)
 
 api.add_resource(Home, '/')
 api.add_resource(Pizza, '/pizza')
