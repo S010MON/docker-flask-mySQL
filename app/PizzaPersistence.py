@@ -133,8 +133,8 @@ def get_customer(id):
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_purchase(purchase):
-    query = ("INSERT INTO Purchase (purchased_at, customer_id, delivery_driver_id) VALUES (NOW(), %s, %s);")
-    cursor.execute(query, (purchase.customer_id, purchase.delivery_driver_id))
+    query = ("INSERT INTO Purchase (purchased_at, customer_id) VALUES (NOW(), %s);")
+    cursor.execute(query, (purchase.customer_id,))
     purchase_id = cursor.lastrowid
     new_purchase = copy.deepcopy(purchase)
     new_purchase.purchase_id = purchase_id
@@ -148,7 +148,7 @@ def create_purchase(purchase):
         cursor.execute(query, (purchase_id, current_drink.drink_id))
 
     for current_dessert in purchase.desserts:
-        query = ("INSERT INTO PizzaMapping (purchase_id, dessert_id) VALUES (%s, %s);")
+        query = ("INSERT INTO DessertMapping (purchase_id, dessert_id) VALUES (%s, %s);")
         cursor.execute(query, (purchase_id, current_dessert.dessert_id))
 
     cnx.commit()
