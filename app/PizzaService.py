@@ -107,15 +107,17 @@ class Purchase(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('customer_id', type=int)
-        parser.add_argument('pizzas', type=dict)
-        parser.add_argument('drinks', type=dict)
-        parser.add_argument('desserts', type=dict)
+        parser.add_argument('pizzas', type=dict, action='append')
+        parser.add_argument('drinks', type=dict, action='append')
+        parser.add_argument('desserts', type=dict, action='append')
         args = parser.parse_args()
-       # data = controller.post_purchase(purchase)
-        data = args['pizzas']
+        
+        purchase = Purchase_object(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'])
+        
+        
         return jsonify( message="pizzas",
                         category="success",
-                        data=data,
+                        data=args['desserts'],
                         status=200)
 
 def not_found_404():
