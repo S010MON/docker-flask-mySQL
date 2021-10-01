@@ -141,15 +141,15 @@ def create_purchase(purchase):
 
     for current_pizza in purchase.pizzas:
         query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_pizza['pizza_id'], purchase.pizzas['quantity']))
+        cursor.execute(query, (purchase_id, int(current_pizza['pizza_id']), int(purchase.pizzas['quantity'])))
 
     for current_drink in purchase.drinks:
         query = ("INSERT INTO DrinkMapping (purchase_id, drink_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_drink['drink_id'], purchase.drinks['quantity']))
+        cursor.execute(query, (purchase_id, int(current_drink['drink_id']), int(purchase.drinks['quantity'])))
 
     for current_dessert in purchase.desserts:
         query = ("INSERT INTO DessertMapping (purchase_id, dessert_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_dessert['dessert_id'], purchase.desserts['quantity']))
+        cursor.execute(query, (purchase_id, int(current_dessert['dessert_id']), int(purchase.desserts['quantity'])))
 
     cnx.commit()
     return new_purchase
@@ -246,4 +246,5 @@ if __name__ == '__main__':
     #sample_pizza = get_pizza(3)
     #print(sample_pizza.name, sample_pizza.toppings)
 
+    tp = Purchase(1, [], [], [])
     # test_purchase = Purchase()
