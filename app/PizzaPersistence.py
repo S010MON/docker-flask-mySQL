@@ -1,3 +1,5 @@
+import copy
+
 from entities.Purchase import Purchase
 from entities.Address import Address
 from entities.DeliveryDriver import DeliveryDriver
@@ -101,6 +103,9 @@ def get_all_drinks():
 
 # ----------------------------------------------------------------------------------------------------------------------
 
+'''
+Requires: customer.name, customer.address, customer.phone
+'''
 def create_customer(customer):
     query = ("INSERT INTO Customer (name, address_id, phone_number)"
              "VALUES (%s, %s, %s);")
@@ -108,9 +113,10 @@ def create_customer(customer):
     query_data = (customer.name, customer.address.address_id, customer.phone)
     cursor.execute(query, query_data)
     current_id = cursor.lastrowid
-    customer.customer_id = current_id
+    new_customer = copy.deepcopy(customer)
+    new_customer.customer_id = current_id
     cnx.commit()
-    return customer
+    return new_customer
 
 
 def get_customer(id):
@@ -127,7 +133,8 @@ def create_purchase(purchase):
     query = ("INSERT INTO Purchase (purchased_at, customer_id, delivery_driver_id) VALUES (NOW(), %s, %s);")
     cursor.execute(query, (purchase.customer_id, purchase.delivery_driver_id))
     purchase_id = cursor.lastrowid
-    purchase.purchase_id = purchase_id
+    new_purchase = copy.deepcopy(purchase)
+    new_purchase.purchase_id = purchase_id
 
     for current_pizza in purchase.pizzas:
         query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id) VALUES (%s, %s);")
@@ -142,7 +149,7 @@ def create_purchase(purchase):
         cursor.execute(query, (purchase_id, current_dessert.dessert_id))
 
     cnx.commit()
-    return purchase
+    return new_purchase
 
 
 def get_purchase(purchase_id):
@@ -185,9 +192,10 @@ def create_address(address):
     query_data = (address.street, address.town, address.postcode)
     cursor.execute(query, query_data)
     current_id = cursor.lastrowid
-    address.address_id = current_id
+    new_address = copy.deepcopy(address)
+    new_address.address_id = current_id
     cnx.commit()
-    return address
+    return new_address
 
 
 def get_address(id):
@@ -223,16 +231,16 @@ if __name__ == '__main__':
     print("---")
 
     test_address = Address("Dampstraat", "Maastricht", "6226GJ")
-    create_address(test_address)
+    test_address = create_address(test_address)
     print(test_address.address_id, test_address.town)
 
     test_customer = Customer("Leon", test_address, "+49 123456789")
-    create_customer(test_customer)
+    test_customer = create_customer(test_customer)
     print(test_customer.customer_id, test_customer.name, test_customer.address.town)
 
     print("---")
 
-    sample_pizza = get_pizza(3)
-    print(sample_pizza.name, sample_pizza.toppings)
+    #sample_pizza = get_pizza(3)
+    #print(sample_pizza.name, sample_pizza.toppings)
 
     # test_purchase = Purchase()
