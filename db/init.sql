@@ -29,18 +29,21 @@ CREATE TABLE PizzaMapping (
     pizza_map_id INT NOT NULL AUTO_INCREMENT,
     purchase_id INT NOT NULL,
     pizza_id INT NOT NULL,
+    quantity INT NOT NULL,
     PRIMARY KEY (pizza_map_id));
 
 CREATE TABLE DrinkMapping (
     drink_map_id INT NOT NULL AUTO_INCREMENT,
     order_id INT NOT NULL,
     purchase_id INT NOT NULL,
+    quantity INT NOT NULL,
     PRIMARY KEY (drink_map_id));
 
 CREATE TABLE DessertMapping (
     dessert_map_id INT NOT NULL AUTO_INCREMENT,
     purchase_id INT NOT NULL,
     dessert_id INT NOT NULL,
+    quantity INT NOT NULL,
     PRIMARY KEY (dessert_map_id));
 
 CREATE TABLE Topping (
