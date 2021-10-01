@@ -22,7 +22,7 @@ class Purchase:
         return{"purchase_id": self.purchase_id,
                 "datetime": self.datetime,
                 "customer": self.customer_id,
-                "pizzas": pizzas,
-                "drinks": drinks,
-                "desserts": desserts,
+                "pizzas": self.pizzas,
+                "drinks": self.drinks,
+                "desserts": self.desserts,
                 "delivery_driver_id": self.delivery_driver_id}
