@@ -5,6 +5,10 @@ Ensure that docker and docker-compose are installed
         docker version
         docker-compose --version
         
+if not installed,:
+        ![Install docker](https://docs.docker.com/get-docker/)
+        ![Install docker-compose](https://docs.docker.com/compose/install/)
+        
 ### To run both containers
 Navigate to the `docker-flask-mySQL/` root directory
 
