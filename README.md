@@ -46,7 +46,7 @@ Your prompt should change to a `#`symbol to indicate you are in the container. N
         $ mysql -u root -p
         $ Enter password: password
 
-Using the `pizzas` database, if the `SHOW DATABASES` command doesn't show the correct databases load in the database script from the init.sql file manually by copying the script and pasting it into your bash terminal that you opened above.
+Using the `pizzas` database, if the `SHOW DATABASES` command doesn't show the correct databases (see below) then run the following command to load the schema and data from the init file
 
         SOURCE /docker-entrypoint-initdb.d/init.sql
         
