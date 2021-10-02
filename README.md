@@ -1,15 +1,18 @@
-## Installation Guide
+# Installation Guide
 
+<br/>
+
+## Dependencies
 Ensure that docker and docker-compose are installed
 
         docker version
         docker-compose --version
         
-if not installed,:
-        ![Install docker](https://docs.docker.com/get-docker/)
-        ![Install docker-compose](https://docs.docker.com/compose/install/)
-        
-### To run both containers
+if not installed -> install ![docker](https://docs.docker.com/get-docker/) and ![docker-compose](https://docs.docker.com/compose/install/) for your OS
+
+<br/>
+
+## Run Server
 Navigate to the `docker-flask-mySQL/` root directory
 
 Build the container:
@@ -22,7 +25,7 @@ Run the container:
 
 Done!
 
---------------------------------------------------
+<br/>
 
 ## Troubleshooting
 ### To check that MySQL database has loaded
@@ -38,11 +41,11 @@ The command should look like, or very similar to this:
 
         sudo docker exec -it docker-flask-mysql_db_1 bash
 
-Your prompt should change to a `#` now log into mysql
+Your prompt should change to a `#`symbol to indicate you are in the container. Now log into mysql:
 
         $ mysql -u root -p
         $ Enter password: password
 
-If the `SHOW DATABASES` command doesn't show the correct databases load in the database script from the init.sql file 
+If the `SHOW DATABASES` command doesn't show the correct databases load in the database script from the init.sql file manually by copying the script and pasting it into your bash terminal that you opened above.
 
         SOURCE /docker-entrypoint-initdb.d/init.sql
