@@ -10,9 +10,9 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: pizzas
-    
+
     volumes:
-      - ./db:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
   app:
     build: ./app           # Where the Dockerfile is stored

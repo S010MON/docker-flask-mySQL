@@ -1,3 +1,6 @@
+CREATE DATABASE pizzas;
+USE pizzas;
+
 CREATE TABLE Pizza (
     pizza_id INT NOT NULL AUTO_INCREMENT,
     pizza_name VARCHAR(255) NOT NULL,
