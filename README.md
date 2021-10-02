@@ -49,3 +49,23 @@ Your prompt should change to a `#`symbol to indicate you are in the container. N
 If the `SHOW DATABASES` command doesn't show the correct databases load in the database script from the init.sql file manually by copying the script and pasting it into your bash terminal that you opened above.
 
         SOURCE /docker-entrypoint-initdb.d/init.sql
+        
+Using the `pizzas` database, the `SHOW TABLES;` command should return this:
+
+        +------------------+
+        | Tables_in_pizzas |
+        +------------------+
+        | Address          |
+        | Customer         |
+        | DeliveryDriver   |
+        | Dessert          |
+        | DessertMapping   |
+        | Drink            |
+        | DrinkMapping     |
+        | Pizza            |
+        | PizzaMapping     |
+        | Purchase         |
+        | Topping          |
+        | ToppingMapping   |
+        +------------------+
+
