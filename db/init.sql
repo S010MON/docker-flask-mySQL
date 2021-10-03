@@ -9,13 +9,13 @@ CREATE TABLE Pizza (
 CREATE TABLE Drink (
     drink_id INT NOT NULL AUTO_INCREMENT,
     drink_name VARCHAR(255) NOT NULL,
-    drink_price FLOAT NOT NULL,
+    drink_price DOUBLE NOT NULL,
     PRIMARY KEY (drink_id));
 
 CREATE TABLE Dessert (
     dessert_id INT NOT NULL AUTO_INCREMENT,
     dessert_name VARCHAR(255) NOT NULL,
-    dessert_price FLOAT NOT NULL,
+    dessert_price DOUBLE NOT NULL,
     PRIMARY KEY (dessert_id));
 
 CREATE TABLE ToppingMapping (
@@ -49,7 +49,7 @@ CREATE TABLE Topping (
     topping_id INT NOT NULL AUTO_INCREMENT,
     topping_name VARCHAR(255) NOT NULL,
     vegetarian BOOL NOT NULL,
-    topping_price FLOAT NOT NULL,
+    topping_price DOUBLE NOT NULL,
     PRIMARY KEY (topping_id));
 
 CREATE TABLE Purchase (
