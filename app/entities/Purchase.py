@@ -4,14 +4,15 @@ from datetime import datetime, timedelta
 class Purchase:
 
     def __init__(self, customer_id, pizzas, drinks, desserts, discount_code=None):
-        self.purchase_id = None
-        self.datetime = None
-        self.estimated_delivery_time = None
-        self.delivery_driver_id = None
         self.customer_id = customer_id
         self.pizzas = pizzas
         self.drinks = drinks
         self.desserts = desserts
+        self.purchase_id = None
+        self.datetime = None
+        self.estimated_delivery_time = None
+        self.delivery_driver_id = None
+        self.total_cost = None
         self.discount_code = discount_code
 
     def to_dict(self):
@@ -25,4 +26,5 @@ class Purchase:
                 "drinks": self.drinks,
                 "desserts": self.desserts,
                 "delivery_driver_id": self.delivery_driver_id,
+                "total_cost":self.total_cost,
                 "discount_code":self.discount_code}

@@ -109,7 +109,16 @@ def post_purchase(purchase):
                        category="failed",
                        status=400)
 
+    if db.valid_discount_code(purchase.discount_code):
+        purchase.total_cost = purchase.total_cost * 0.9
+    else:
+        db.add_to_customer_pizzas_total(len(purchase.pizzas))
+        if db.get_customer_pizzas_total(purchase.customer_id):
+            purchase.discount_code = db.generate_discount_code()
+            db.remove_from_customer_pizzas_total(10)
+
     data = db.create_purchase(purchase).to_dict()
+
     return jsonify(message="pizzas",
                    category="success",
                    data=data,
