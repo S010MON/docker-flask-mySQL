@@ -222,8 +222,12 @@ def delete_purchase(purchase_id):
     return deleted_order
 
 def purchase_exists(purchase_id) -> bool():
-    """ Return True if the purchase exists AND has not been closed yet, else return False """
+    """Return True if the purchase exists AND has not been closed yet, else return False"""
     return True
+
+def get_undelivered_purchases():
+    """ Return a list of purchases that have not been delivered, return None if none exist"""
+    pass
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -279,7 +283,18 @@ def get_address(id):
     result = cursor.fetchone()
     return Address(result[1], result[2], result[3], result[0])
 
+# ----------------------------------------------------------------------------------------------------------------------
 
+def generate_discount_code() -> str():
+    """ Create a new discount code and set it's boolean flag to `Valid=True` """
+    return CODE123
+
+def valid_discount_code(code) -> bool():
+    """ Check if the code has been used, return True if it is valid """
+    return True
+
+def set_discount_code_invalid(code):
+    """ Set the code to invalid"""
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Main function to test query methods
