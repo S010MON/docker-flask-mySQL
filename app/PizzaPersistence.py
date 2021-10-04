@@ -140,7 +140,10 @@ def get_customer(id):
     cursor.execute(query, (id,))
     result = cursor.fetchone()
     customer_address = get_address(result[2])
-    return Customer(result[1], customer_address, result[3], result[0])
+    if customer_address is None:
+        return None
+    else:
+        return Customer(result[1], customer_address, result[3], result[0])
 
 def customer_exists(customer) -> bool():
     query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone_number = %s;")
@@ -281,7 +284,10 @@ def get_address(id):
     query = ("SELECT address_id, street, town, postcode FROM Address WHERE address_id = %s;")
     cursor.execute(query, (id,))
     result = cursor.fetchone()
-    return Address(result[1], result[2], result[3], result[0])
+    if result is None:
+        return None
+    else:
+        return Address(result[1], result[2], result[3], result[0])
 
 # ----------------------------------------------------------------------------------------------------------------------
 
