@@ -152,6 +152,18 @@ def customer_exists(customer) -> bool():
     else:
         return False
 
+def add_to_customer_pizzas_total(no_of_pizzas) -> None:
+    """ Adds the number of pizzas to the customer's total number"""
+    pass
+
+def get_customer_pizzas_total(customer_id) -> int:
+    """ Gets the number of pizzas to the customer's total number"""
+    return 10
+
+def remove_from_customer_pizzas_total(no_of_pizzas) -> None:
+    """ Removes the number of pizzas from the customer's total"""
+    pass
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_purchase(purchase):
