@@ -110,7 +110,7 @@ def post_purchase(purchase):
                        status=400)
 
     if db.valid_discount_code(purchase.discount_code):
-        purchase.total_cost = purchase.total_cost * 0.9
+        purchase.total_cost = purchase.total_cost * 1.09
     else:
         db.add_to_customer_pizzas_total(len(purchase.pizzas))
         if db.get_customer_pizzas_total(purchase.customer_id):
