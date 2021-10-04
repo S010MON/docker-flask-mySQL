@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 
 class Purchase:
 
-    def __init__(self, customer_id, pizzas, drinks, desserts):
+    def __init__(self, customer_id, pizzas, drinks, desserts, discount_code=None):
         self.purchase_id = None
         self.datetime = None
         self.estimated_delivery_time = None
@@ -12,6 +12,7 @@ class Purchase:
         self.pizzas = pizzas
         self.drinks = drinks
         self.desserts = desserts
+        self.discount_code = discount_code
 
     def to_dict(self):
         if self.datetime is not None:
@@ -23,4 +24,5 @@ class Purchase:
                 "pizzas": self.pizzas,
                 "drinks": self.drinks,
                 "desserts": self.desserts,
-                "delivery_driver_id": self.delivery_driver_id}
+                "delivery_driver_id": self.delivery_driver_id,
+                "discount_code":self.discount_code}

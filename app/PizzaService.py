@@ -80,10 +80,10 @@ class Purchase(Resource):
         parser.add_argument('pizzas', type=dict, action='append')
         parser.add_argument('drinks', type=dict, action='append')
         parser.add_argument('desserts', type=dict, action='append')
-        parser.add_argument('discount_code', type=str )
+        parser.add_argument('discount_code', type=str)
         args = parser.parse_args()
         
-        purchase = Purchase_obj(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'])
+        purchase = Purchase_obj(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'], args['discount_code'])
         response = ctrlr.post_purchase(purchase)
         return response
 
