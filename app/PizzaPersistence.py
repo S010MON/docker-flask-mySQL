@@ -142,7 +142,7 @@ def get_customer(id):
     customer_address = get_address(result[2])
     return Customer(result[1], customer_address, result[3], result[0])
 
-def customer_exists(customer):
+def customer_exists(customer) -> bool():
     query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone_number = %s;")
     cursor.execute(query, (customer.name, customer.phone))
     row_number = cursor.fetchall()
@@ -221,6 +221,10 @@ def delete_purchase(purchase_id):
     cnx.commit()
     return deleted_order
 
+def purchase_exists(purchase_id) -> bool():
+    """ Return True if the purchase exists AND has not been closed yet, else return False """
+    return True
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_delivery_drivers(area):
@@ -245,6 +249,14 @@ def update_delivery_driver(delivery_driver, status):
     new_delivery_driver = DeliveryDriver(delivery_driver.driver_id, delivery_driver.operating_area, status, delivery_driver.name)
     cnx.commit()
     return new_delivery_driver
+
+def set_delivery_driver(purchase_id, driver_id):
+    """ For purchase with the id `purchase_id` set driver to id `driver_id` """
+    pass
+
+def get_available_drivers(postcode):
+    """ Return a list of all available drivers for postcode `postcode` """
+    pass
 
 # ----------------------------------------------------------------------------------------------------------------------
 
