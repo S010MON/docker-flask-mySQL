@@ -291,7 +291,10 @@ def generate_discount_code() -> str():
 
 def valid_discount_code(code) -> bool():
     """ Check if the code has been used, return True if it is valid """
-    return True
+    if code == "CODE123":
+        return True
+    else:
+        return False
 
 def set_discount_code_invalid(code):
     """ Set the code to invalid"""
