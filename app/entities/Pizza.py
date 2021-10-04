@@ -1,9 +1,9 @@
 class Pizza:
 
-    def __init__(self, pizza_id, name, cost, toppings, vegetarian):
+    def __init__(self, pizza_id, name, toppings, vegetarian):
         self.pizza_id = pizza_id
         self.name = name
-        self.cost = cost
+        self.cost = 0.0
         self.toppings = toppings
         self.vegetarian = vegetarian
 

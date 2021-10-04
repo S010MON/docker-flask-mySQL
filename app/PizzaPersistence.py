@@ -23,23 +23,20 @@ cnx = mysql.connector.connect(**config)
 
 cursor = cnx.cursor()
 
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_pizzas():
     query = ("SELECT Pizza.pizza_id, "
              "Pizza.pizza_name, "
-             "Pizza.pizza_price_euros, "
-             "Pizza.pizza_price_cents, "
              "Topping.topping_name,"
              "Topping.vegetarian FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
-             "INNER JOIN Topping on ToppingMapping.topping_id = Topping.topping_id;")
+             "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id;")
     cursor.execute(query)
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
     # are geting mapped to the corresponding pizza
     allPizzas = []
-    for (pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, topping_name, vegetarian) in cursor:
+    for (pizza_id, pizza_name, topping_name, vegetarian) in cursor:
         already_exists = False
         for check_pizza in allPizzas:
             if check_pizza.pizza_id == pizza_id:
@@ -47,11 +44,13 @@ def get_all_pizzas():
                 already_exists = True
         if already_exists:
             pointer.toppings.append(topping_name)
-            if vegetarian == False:
+            if not vegetarian:
                 pointer.vegetarian = False
         else:
             allPizzas.append(
-                Pizza(pizza_id, pizza_name, pizza_price_euros, [topping_name], bool(vegetarian)))  # add toppings
+                Pizza(pizza_id, pizza_name, [topping_name], bool(vegetarian)))  # add toppings
+    # Add prices
+    assign_pizza_prices(allPizzas)
     return allPizzas
 
 
@@ -62,7 +61,7 @@ def get_pizza(current_pizza_id):
              "Pizza.pizza_price_cents, "
              "Topping.topping_name FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
-             "INNER JOIN Topping on ToppingMapping.topping_id = Topping.topping_id"
+             "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id"
              "WHERE Pizza.pizza_id = 2;")
     cursor.execute(query, (current_pizza_id,))
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
@@ -78,17 +77,31 @@ def get_pizza(current_pizza_id):
             pointer.toppings.append(topping_name)
         else:
             result_pizza = Pizza(pizza_id, pizza_name, pizza_price_euros, [topping_name])  # add toppings
+
+    allPizzas = [result_pizza]
+    assign_pizza_prices(allPizzas)
     return result_pizza
+
+
+def assign_pizza_prices(allPizzas):
+    for current_pizza in allPizzas:
+        query = ("SELECT SUM(topping_price) AS topping_price_sum FROM Pizza "
+                 "JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
+                 "JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id "
+                 "WHERE Pizza.pizza_id = %s;")
+        cursor.execute(query, (current_pizza.pizza_id,))
+        topping_cost_sum = cursor.fetchone()[0]
+        current_pizza.cost = topping_cost_sum * 1.4
 
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_desserts():
     query = (
-        "SELECT dessert_id, dessert_name, dessert_price_euros, dessert_price_cents FROM Dessert;")
+        "SELECT dessert_id, dessert_name, dessert_price FROM Dessert;")
     cursor.execute(query)
     allDeserts = []
-    for (dessert_id, dessert_name, dessert_price_euros, dessert_price_cents) in cursor:
-        allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price_euros))  # add toppings
+    for (dessert_id, dessert_name, dessert_price) in cursor:
+        allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price))  # add toppings
     return allDeserts
 
 
@@ -96,11 +109,11 @@ def get_all_desserts():
 
 def get_all_drinks():
     query = (
-        "SELECT drink_id, drink_name, drink_price_euros, drink_price_cents FROM Drink;")  # need to add join for toppings
+        "SELECT drink_id, drink_name, drink_price FROM Drink;")  # need to add join for toppings
     cursor.execute(query)
     allDrinks = []
-    for (drink_id, drink_name, drink_price_euros, drink_price_cents) in cursor:
-        allDrinks.append(Drink(drink_id, drink_name, drink_price_euros))  # add toppings
+    for (drink_id, drink_name, drink_price) in cursor:
+        allDrinks.append(Drink(drink_id, drink_name, drink_price))  # add toppings
     return allDrinks
 
 
@@ -260,17 +273,17 @@ def get_address(id):
 # Main function to test query methods
 if __name__ == '__main__':
     for pizza in get_all_pizzas():
-        print(pizza.pizza_id, pizza.name, pizza.toppings, pizza.vegetarian)
+        print(pizza.pizza_id, pizza.name, pizza.cost, pizza.toppings, pizza.vegetarian)
 
     print("---")
 
     for drink in get_all_drinks():
-        print(drink.drink_id, drink.name)
+        print(drink.drink_id, drink.name, drink.cost)
 
     print("---")
 
     for dessert in get_all_desserts():
-        print(dessert.dessert_id, dessert.name)
+        print(dessert.dessert_id, dessert.name, dessert.cost)
 
     print("---")
 

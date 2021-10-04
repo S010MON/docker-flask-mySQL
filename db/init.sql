@@ -4,22 +4,18 @@ USE pizzas;
 CREATE TABLE Pizza (
     pizza_id INT NOT NULL AUTO_INCREMENT,
     pizza_name VARCHAR(255) NOT NULL,
-    pizza_price_euros INT NOT NULL,
-    pizza_price_cents INT NOT NULL,
     PRIMARY KEY (pizza_id));
 
 CREATE TABLE Drink (
     drink_id INT NOT NULL AUTO_INCREMENT,
     drink_name VARCHAR(255) NOT NULL,
-    drink_price_euros INT NOT NULL,
-    drink_price_cents INT NOT NULL,
+    drink_price DOUBLE NOT NULL,
     PRIMARY KEY (drink_id));
 
 CREATE TABLE Dessert (
     dessert_id INT NOT NULL AUTO_INCREMENT,
     dessert_name VARCHAR(255) NOT NULL,
-    dessert_price_euros INT NOT NULL,
-    dessert_price_cents INT NOT NULL,
+    dessert_price DOUBLE NOT NULL,
     PRIMARY KEY (dessert_id));
 
 CREATE TABLE ToppingMapping (
@@ -53,6 +49,7 @@ CREATE TABLE Topping (
     topping_id INT NOT NULL AUTO_INCREMENT,
     topping_name VARCHAR(255) NOT NULL,
     vegetarian BOOL NOT NULL,
+    topping_price DOUBLE NOT NULL,
     PRIMARY KEY (topping_id));
 
 CREATE TABLE Purchase (
@@ -84,55 +81,55 @@ CREATE TABLE Address (
     primary key (address_id));
 
 -- Add pizzas
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Margherita", 5, 0); -- 1
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Tuna", 6, 50); -- 2
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Pepperoni", 7, 0); -- 3
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Vegetaria", 6, 0); -- 4
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Salami", 8, 50); -- 5
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Chicken", 7, 50); -- 6
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Hawaii", 5, 0); -- 7
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Dutch Herbs", 4, 20); -- 8
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Lover", 6, 90); -- 9
-INSERT INTO Pizza (pizza_name, pizza_price_euros, pizza_price_cents) VALUES ("Calzone", 5, 0); -- 10
+INSERT INTO Pizza (pizza_name) VALUES ("Margherita"); -- 1
+INSERT INTO Pizza (pizza_name) VALUES ("Tuna"); -- 2
+INSERT INTO Pizza (pizza_name) VALUES ("Pepperoni"); -- 3
+INSERT INTO Pizza (pizza_name) VALUES ("Vegetaria"); -- 4
+INSERT INTO Pizza (pizza_name) VALUES ("Salami"); -- 5
+INSERT INTO Pizza (pizza_name) VALUES ("Chicken"); -- 6
+INSERT INTO Pizza (pizza_name) VALUES ("Hawaii"); -- 7
+INSERT INTO Pizza (pizza_name) VALUES ("Dutch Herbs"); -- 8
+INSERT INTO Pizza (pizza_name) VALUES ("Lover"); -- 9
+INSERT INTO Pizza (pizza_name) VALUES ("Calzone"); -- 10
 
 -- Add drinks
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Water", 2, 0);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Coke", 3, 0);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Fanta", 3, 0);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Sprite", 3, 0);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Red Bull", 4, 50);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Ice Tea", 3, 50);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Bitter Lemon", 3, 0);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Paulaner Weissbier", 5, 0);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Glenfinnan 12 Years Old", 25, 50);
-INSERT INTO Drink (drink_name, drink_price_euros, drink_price_cents) VALUES ("Veuve Clicquot Ponsardin", 99, 90);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Water", 2.0);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Coke", 3.0);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Fanta", 3.0);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Sprite", 3.0);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Red Bull", 4.5);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Ice Tea", 3.5);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Bitter Lemon", 3.0);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Paulaner Weissbier", 5.0);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Glenfinnan 12 Years Old", 25.50);
+INSERT INTO Drink (drink_name, drink_price) VALUES ("Veuve Clicquot Ponsardin", 99.90);
 
 
 -- Add desserts
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Tiramisu", 5, 0);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Cheesecake", 6, 50);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Twin Cannoli", 5, 0);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Lorem Ipsum Cupcake", 6, 90);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Banana Waffle", 5, 50);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Nutella Banana", 6, 50);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Apple Crumble", 7, 0);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Ice Cream", 5, 0);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Rice Pudding", 4, 0);
-INSERT INTO Dessert (dessert_name, dessert_price_euros, dessert_price_cents) VALUES ("Protein Shake Ice", 24, 7);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Tiramisu", 5.0);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Cheesecake", 6.50);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Twin Cannoli", 5.0);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Lorem Ipsum Cupcake", 6.90);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Banana Waffle", 5.50);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Nutella Banana", 6.50);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Apple Crumble", 7.0);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Ice Cream", 5.0);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Rice Pudding", 4.0);
+INSERT INTO Dessert (dessert_name, dessert_price) VALUES ("Protein Shake Ice", 24.7);
 
 -- Add toppings
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Cheese", TRUE); -- 1
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Tuna", FALSE); -- 2
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Pineapple", TRUE); -- 3
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Bacon", FALSE); -- 4
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Tomato", TRUE); -- 5
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Purple Haze", True); -- 6
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Chicken", FALSE); -- 7
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Salami", FALSE); -- 8
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Blue Pills", TRUE); -- 9
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Mozzarella", TRUE); -- 10
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Basil", TRUE); -- 11
-INSERT INTO Topping (topping_name, vegetarian) VALUES ("Pepperoni", FALSE); -- 12
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Cheese", TRUE, 2.5); -- 1
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Tuna", FALSE, 3.0); -- 2
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Pineapple", TRUE, 2.5); -- 3
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Bacon", FALSE, 4.0); -- 4
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Tomato", TRUE, 2.2); -- 5
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Purple Haze", True, 4.2); -- 6
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Chicken", FALSE, 3.5); -- 7
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Salami", FALSE, 4.1); -- 8
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Blue Pills", TRUE, 6.9); -- 9
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Mozzarella", TRUE, 3.5); -- 10
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Basil", TRUE, 1.5); -- 11
+INSERT INTO Topping (topping_name, vegetarian, topping_price) VALUES ("Pepperoni", FALSE, 4.5); -- 12
 
 -- Map toppings to pizza
 INSERT INTO ToppingMapping(pizza_id, topping_id) VALUES (1, 1); -- Margherita, Cheese
