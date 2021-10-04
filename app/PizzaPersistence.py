@@ -299,7 +299,7 @@ def get_address(id):
 
 def generate_discount_code() -> str:
     """ Create a new discount code and set it's boolean flag to `Valid=True` """
-    return CODE123
+    return "CODE123"
 
 def valid_discount_code(code) -> bool:
     """ Check if the code has been used, return True if it is valid """
