@@ -140,7 +140,7 @@ def get_customer(id):
     cursor.execute(query, (id,))
     result = cursor.fetchone()
     customer_address = get_address(result[2])
-    return Customer(result[0], result[1], customer_address, result[3])
+    return Customer(result[1], customer_address, result[3], result[0])
 
 def customer_exists(customer):
     query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone_number = %s;")
@@ -262,10 +262,10 @@ def create_address(address):
 
 
 def get_address(id):
-    query = ("SELECT address_id. street, town, postcode FROM Address WHERE address_id = %s;")
+    query = ("SELECT address_id, street, town, postcode FROM Address WHERE address_id = %s;")
     cursor.execute(query, (id,))
     result = cursor.fetchone()
-    return Address(result[0], result[1], result[2], result[3])
+    return Address(result[1], result[2], result[3], result[0])
 
 
 # ----------------------------------------------------------------------------------------------------------------------

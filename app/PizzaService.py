@@ -48,7 +48,8 @@ class Customer(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('customer_id', type=int)
         args = parser.parse_args()
-        return ctrlr.get_customer_by_id(args['customer_id']), 200
+        response = ctrlr.get_customer_by_id(args['customer_id'])
+        return response
 
     def post(self):
         parser = reqparse.RequestParser()

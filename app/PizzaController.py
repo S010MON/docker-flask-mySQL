@@ -56,8 +56,15 @@ def get_all_desserts():
 
 
 def get_customer_by_id(customer_id):
-    data = db.get_customer(customer_id).to_dict()
-    return data
+    customer = db.get_customer(customer_id)
+    if customer is None:
+        return not_found_404()
+
+    data = customer.to_dict()
+    return jsonify(message="customer found",
+                   category="success",
+                   data=data,
+                   status=200)
 
 
 def get_purchase_by_id(purchase_id):
@@ -90,6 +97,16 @@ def post_purchase(purchase):
         return jsonify(message="order must contain a pizza",
                        category="failed",
                        data=None,
+                       status=400)
+
+    if purchase.customer_id is None:
+        return jsonify(message="customer does not exist",
+                       category="failed",
+                       status=400)
+
+    if db.get_customer(purchase.customer_id) is None:
+        return jsonify(message="customer does not exist",
+                       category="failed",
                        status=400)
 
     data = db.create_purchase(purchase).to_dict()
