@@ -140,7 +140,10 @@ def get_customer(id):
     cursor.execute(query, (id,))
     result = cursor.fetchone()
     customer_address = get_address(result[2])
-    return Customer(result[1], customer_address, result[3], result[0])
+    if customer_address is None:
+        return None
+    else:
+        return Customer(result[1], customer_address, result[3], result[0])
 
 def customer_exists(customer) -> bool():
     query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone_number = %s;")
@@ -167,30 +170,39 @@ def remove_from_customer_pizzas_total(no_of_pizzas) -> None:
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_purchase(purchase):
-    query = ("INSERT INTO Purchase (purchased_at, customer_id) VALUES (NOW(), %s);")
+    return None
+    # check for valid customer id
+    query = ("SELECT customer_id FROM Customer WHERE customer_id = %s;")
     cursor.execute(query, (purchase.customer_id,))
-    purchase_id = cursor.lastrowid
-    new_purchase = copy.deepcopy(purchase)
-    query = ("SELECT purchased_at FROM Purchase WHERE purchase_id = %s")
-    cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
-    new_purchase.datetime = result[0]
-    new_purchase.purchase_id = purchase_id
+    if result is None:
+        return None
+    else:
+        # insert customer
+        query = ("INSERT INTO Purchase (purchased_at, customer_id) VALUES (NOW(), %s);")
+        cursor.execute(query, (purchase.customer_id,))
+        purchase_id = cursor.lastrowid
+        new_purchase = copy.deepcopy(purchase)
+        query = ("SELECT purchased_at FROM Purchase WHERE purchase_id = %s")
+        cursor.execute(query, (purchase_id,))
+        result = cursor.fetchone()
+        new_purchase.datetime = result[0]
+        new_purchase.purchase_id = purchase_id
 
-    for current_pizza in purchase.pizzas:
-        query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_pizza['pizza_id'], current_pizza['quantity']))
+        for current_pizza in purchase.pizzas:
+            query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id, quantity) VALUES (%s, %s, %s);")
+            cursor.execute(query, (purchase_id, current_pizza['pizza_id'], current_pizza['quantity']))
 
-    for current_drink in purchase.drinks:
-        query = ("INSERT INTO DrinkMapping (purchase_id, drink_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_drink['drink_id'], current_drink['quantity']))
+        for current_drink in purchase.drinks:
+            query = ("INSERT INTO DrinkMapping (purchase_id, drink_id, quantity) VALUES (%s, %s, %s);")
+            cursor.execute(query, (purchase_id, current_drink['drink_id'], current_drink['quantity']))
 
-    for current_dessert in purchase.desserts:
-        query = ("INSERT INTO DessertMapping (purchase_id, dessert_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_dessert['dessert_id'], current_dessert['quantity']))
+        for current_dessert in purchase.desserts:
+            query = ("INSERT INTO DessertMapping (purchase_id, dessert_id, quantity) VALUES (%s, %s, %s);")
+            cursor.execute(query, (purchase_id, current_dessert['dessert_id'], current_dessert['quantity']))
 
-    cnx.commit()
-    return new_purchase
+        cnx.commit()
+        return new_purchase
 
 
 def get_purchase(purchase_id):
@@ -293,7 +305,10 @@ def get_address(id):
     query = ("SELECT address_id, street, town, postcode FROM Address WHERE address_id = %s;")
     cursor.execute(query, (id,))
     result = cursor.fetchone()
-    return Address(result[1], result[2], result[3], result[0])
+    if result is None:
+        return None
+    else:
+        return Address(result[1], result[2], result[3], result[0])
 
 # ----------------------------------------------------------------------------------------------------------------------
 
