@@ -24,6 +24,7 @@ Pizza Service
 
 class Home(Resource):
     def get(self):
+        update_orders()
         return {"message":"Welcome to Pizza Maastricht"}, 200
 
 
@@ -84,6 +85,14 @@ class Purchase(Resource):
         
         purchase = Purchase_obj(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'], args['discount_code'])
         response = ctrlr.post_purchase(purchase)
+        return response
+
+    def put(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('purchase_id', type=int)
+        args = parser.parse_args()
+
+        response = ctrlr.cancel_purchase(args['purchase_id'])
         return response
 
     def delete(self):

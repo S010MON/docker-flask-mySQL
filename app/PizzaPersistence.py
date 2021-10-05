@@ -119,10 +119,11 @@ def get_all_drinks():
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-'''
-Requires: customer.name, customer.address, customer.phone
-'''
+
 def create_customer(customer):
+    """
+    Requires: customer.name, customer.address, customer.phone
+    """
     query = ("INSERT INTO Customer (name, address_id, phone_number)"
              "VALUES (%s, %s, %s);")
 
@@ -170,7 +171,6 @@ def remove_from_customer_pizzas_total(no_of_pizzas) -> None:
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_purchase(purchase):
-    return None
     # check for valid customer id
     query = ("SELECT customer_id FROM Customer WHERE customer_id = %s;")
     cursor.execute(query, (purchase.customer_id,))
@@ -227,7 +227,6 @@ def get_purchase(purchase_id):
     for (drink_id, quantity) in cursor:
         new_purchase.drinks.append({"drink_id": drink_id,
                                     "quantity": quantity})
-
     #Query desserts
     query = ("SELECT DessertMapping.dessert_id, DessertMapping.quantity FROM Purchase "
              "JOIN DessertMapping ON Purchase.purchase_id = DessertMapping.purchase_id WHERE Purchase.purchase_id = %s;")
@@ -238,6 +237,7 @@ def get_purchase(purchase_id):
 
     return new_purchase
 
+
 def delete_purchase(purchase_id):
     deleted_order = get_purchase(purchase_id)
     query = ("DELETE FROM Purchase WHERE purchase_id = %s;")
@@ -245,8 +245,9 @@ def delete_purchase(purchase_id):
     cnx.commit()
     return deleted_order
 
-"""Return True if the purchase exists AND has not been closed yet, else return False"""
+
 def purchase_exists(purchase_id) -> bool():
+    """ Return True if the purchase exists AND has not been closed yet, else return False """
     query = ("SELECT purchase_id FROM Purchase WHERE purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
@@ -257,9 +258,9 @@ def purchase_exists(purchase_id) -> bool():
     return True
 
 
-""" Return a list of purchases that have not been delivered, return None if none exist"""
 def get_undelivered_purchases():
-    query = ("SELECT purchase_id FROM Purchase WHERE purchased_at > DATE_SUB(NOW(), INTERVAL '35' MINUTES);")
+    """ Return a list of purchases that have not been delivered, return None if none exist """
+    query = ("SELECT purchase_id FROM Purchase;")
     cursor.execute(query)
     undelivered_purchases = []
     result = cursor.fetchall()
@@ -271,14 +272,14 @@ def get_undelivered_purchases():
     return undelivered_purchases
 
 
-""" Sets the purchase of """
 def update_purchase_status(purchase_id, dispatched_time):
+    """ Sets the purchase of """
     query = ("UPDATE Purchase SET purchased_at = %s WHERE purchase_id = %s;")
     cursor.execute(query, (dispatched_time, purchase_id))
 
 
-""" For purchase with the id `purchase_id` set driver to id `driver_id` """
 def set_delivery_driver(purchase_id, driver_id):
+    """ For purchase with the id `purchase_id` set driver to id `driver_id` """
     query = ("UPDATE Purchase SET delivery_driver_id = %s WHERE purchase_id = %s")
     cursor.execute(query, (driver_id, purchase_id))
 
