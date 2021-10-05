@@ -8,5 +8,5 @@ class Drink:
     def to_dict(self):
         return {"drink_id": self.drink_id,
                 "name": self.name,
-                "cost": self.cost}
+                "cost": round(self.cost,3)}
         

@@ -26,5 +26,5 @@ class Purchase:
                 "drinks": self.drinks,
                 "desserts": self.desserts,
                 "delivery_driver_id": self.delivery_driver_id,
-                "total_cost":self.total_cost,
+                "total_cost": round(self.total_cost, 3),
                 "discount_code":self.discount_code}
