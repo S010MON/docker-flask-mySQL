@@ -119,10 +119,11 @@ def get_all_drinks():
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-'''
-Requires: customer.name, customer.address, customer.phone
-'''
+
 def create_customer(customer):
+    """
+    Requires: customer.name, customer.address, customer.phone
+    """
     query = ("INSERT INTO Customer (name, address_id, phone_number)"
              "VALUES (%s, %s, %s);")
 
@@ -170,7 +171,6 @@ def remove_from_customer_pizzas_total(no_of_pizzas) -> None:
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_purchase(purchase):
-    return None
     # check for valid customer id
     query = ("SELECT customer_id FROM Customer WHERE customer_id = %s;")
     cursor.execute(query, (purchase.customer_id,))
@@ -227,7 +227,6 @@ def get_purchase(purchase_id):
     for (drink_id, quantity) in cursor:
         new_purchase.drinks.append({"drink_id": drink_id,
                                     "quantity": quantity})
-
     #Query desserts
     query = ("SELECT DessertMapping.dessert_id, DessertMapping.quantity FROM Purchase "
              "JOIN DessertMapping ON Purchase.purchase_id = DessertMapping.purchase_id WHERE Purchase.purchase_id = %s;")
@@ -238,6 +237,7 @@ def get_purchase(purchase_id):
 
     return new_purchase
 
+
 def delete_purchase(purchase_id):
     deleted_order = get_purchase(purchase_id)
     query = ("DELETE FROM Purchase WHERE purchase_id = %s;")
@@ -245,13 +245,44 @@ def delete_purchase(purchase_id):
     cnx.commit()
     return deleted_order
 
+
 def purchase_exists(purchase_id) -> bool():
-    """Return True if the purchase exists AND has not been closed yet, else return False"""
+    """ Return True if the purchase exists AND has not been closed yet, else return False """
+    query = ("SELECT purchase_id FROM Purchase WHERE purchase_id = %s;")
+    cursor.execute(query, (purchase_id,))
+    result = cursor.fetchone()
+    if result is None:
+        return False
+    else:
+        return True
     return True
 
+
 def get_undelivered_purchases():
-    """ Return a list of purchases that have not been delivered, return None if none exist"""
-    pass
+    """ Return a list of purchases that have not been delivered, return None if none exist """
+    query = ("SELECT purchase_id FROM Purchase;")
+    cursor.execute(query)
+    undelivered_purchases = []
+    result = cursor.fetchall()
+    if result is None:
+        return None
+    else:
+        for (purchase_id,) in result:
+            undelivered_purchases.append(get_purchase(purchase_id))
+    return undelivered_purchases
+
+
+def update_purchase_status(purchase_id, dispatched_time):
+    """ Sets the purchase of """
+    query = ("UPDATE Purchase SET purchased_at = %s WHERE purchase_id = %s;")
+    cursor.execute(query, (dispatched_time, purchase_id))
+
+
+def set_delivery_driver(purchase_id, driver_id):
+    """ For purchase with the id `purchase_id` set driver to id `driver_id` """
+    query = ("UPDATE Purchase SET delivery_driver_id = %s WHERE purchase_id = %s")
+    cursor.execute(query, (driver_id, purchase_id))
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -278,13 +309,21 @@ def update_delivery_driver(delivery_driver, status):
     cnx.commit()
     return new_delivery_driver
 
-def set_delivery_driver(purchase_id, driver_id):
-    """ For purchase with the id `purchase_id` set driver to id `driver_id` """
-    pass
 
+""" Return a list of all available drivers for postcode `postcode` """
 def get_available_drivers(postcode):
-    """ Return a list of all available drivers for postcode `postcode` """
-    pass
+    all_available_drivers = []
+    query = ("SELECT driver_id, operating_area, on_task, name FROM DeliveryDriver "
+             "WHERE operating_area = %s AND on_task = FALSE;")
+    cursor.execute(query, (postcode,))
+    result = cursor.fetchall()
+    if result is None:
+        return all_available_drivers
+    else:
+        for (driver_id, operating_area, on_task, name) in result:
+            all_available_drivers.append(DeliveryDriver(driver_id, operating_area, on_task, name))
+        return all_available_drivers
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 
