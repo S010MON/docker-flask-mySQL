@@ -56,8 +56,15 @@ def get_all_desserts():
 
 
 def get_customer_by_id(customer_id):
-    data = db.get_customer(customer_id).to_dict()
-    return data
+    customer = db.get_customer(customer_id)
+    if customer is None:
+        return not_found_404()
+
+    data = customer.to_dict()
+    return jsonify(message="customer found",
+                   category="success",
+                   data=data,
+                   status=200)
 
 
 def get_purchase_by_id(purchase_id):
@@ -92,12 +99,56 @@ def post_purchase(purchase):
                        data=None,
                        status=400)
 
-    data = db.create_purchase(purchase).to_dict()
+    if purchase.customer_id is None:
+        return jsonify(message="customer does not exist",
+                       category="failed",
+                       status=400)
+
+    if db.get_customer(purchase.customer_id) is None:
+        return jsonify(message="customer does not exist",
+                       category="failed",
+                       status=400)
+
+    if db.valid_discount_code(purchase.discount_code):
+        purchase.total_cost = purchase.total_cost * 1.09
+    else:
+        db.add_to_customer_pizzas_total(len(purchase.pizzas))
+        if db.get_customer_pizzas_total(purchase.customer_id):
+            purchase.discount_code = db.generate_discount_code()
+            db.remove_from_customer_pizzas_total(10)
+
+    data = db.create_purchase(purchase)
+    if data is None:
+        return jsonify(message="Failed to create order",
+                       category="failed",
+                       status=400)
+
+    data = data.to_dict()
     return jsonify(message="pizzas",
                    category="success",
                    data=data,
                    status=201)
 
+def cancel_purchase(purchase_id):
+    purchase = db.get_purchase(purchase_id)
+    if purchase is None:
+        return jsonify(message="Order does not exist",
+                       category="failed",
+                       data=None,
+                       status=404)
+
+    last_minute = purchase.datetime + timedelta(minutes=5)
+    if datetime.now() > last_minute:
+        return jsonify(message="Cannot Cancel Order",
+                       category="failed",
+                       data=purchase.to_dict(),
+                       status=400)
+
+    db.update_purchase_status(purchase_id, "cancelled")
+    return jsonify(message="Order Deleted",
+                   category="success",
+                   data=purchase.to_dict(),
+                   status=200)
 
 def delete_purchase(purchase_id):
     purchase = db.get_purchase(purchase_id)
@@ -123,12 +174,22 @@ def delete_purchase(purchase_id):
 
 def update_orders():
     # TODO - run update on all current orders
-    # undelivered_purchases = db.get_all_undelivered_purchases()
-    # for purchase in undelivered_purchases:
-    #    dispatch_time = purchase.datetime + timedelta(minutes=5)
-    #    if dispatch_time > datetime.now():
-    #        driver =
-    #        db.update_order_dispatched(purchase.purchase_id, datetime.now())
+    undelivered_purchases = db.get_undelivered_purchases()
+    print(str(len(undelivered_purchases)) + ' undelivered orders in queue', flush=True)
+
+    for purchase in undelivered_purchases:
+        dispatch_time = purchase.datetime + timedelta(minutes=5)
+        print('Order ' + str(purchase.purchase_id) + ' ordered at ' + str(purchase.datetime), flush=True)
+
+        if dispatch_time > datetime.now():
+            print('Looking for driver for order' + purchase.purchase_id, flush=True)
+            customer = db.get_customer(purchase.customer_id)
+            drivers = db.get_available_drivers(customer.address.postcode)
+
+            if len(drivers) >= 1:
+                db.set_delivery_driver(purchase.purchase_id, drivers[0].driver_id)
+                db.update_order_dispatched(purchase.purchase_id, datetime.now())
+                print('Order: ' + purchase.purchase_id + ' dispatched', flush=True)
     print('Orders updated', flush=True)
 
 

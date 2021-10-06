@@ -1,4 +1,3 @@
-import sys
 from flask_cors import CORS
 from flask import Flask
 from flask_restful import Resource, Api, reqparse
@@ -25,6 +24,7 @@ Pizza Service
 
 class Home(Resource):
     def get(self):
+        update_orders()
         return {"message":"Welcome to Pizza Maastricht"}, 200
 
 
@@ -48,7 +48,8 @@ class Customer(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('customer_id', type=int)
         args = parser.parse_args()
-        return ctrlr.get_customer_by_id(args['customer_id']), 200
+        response = ctrlr.get_customer_by_id(args['customer_id'])
+        return response
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -79,10 +80,19 @@ class Purchase(Resource):
         parser.add_argument('pizzas', type=dict, action='append')
         parser.add_argument('drinks', type=dict, action='append')
         parser.add_argument('desserts', type=dict, action='append')
+        parser.add_argument('discount_code', type=str)
         args = parser.parse_args()
         
-        purchase = Purchase_obj(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'])
+        purchase = Purchase_obj(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'], args['discount_code'])
         response = ctrlr.post_purchase(purchase)
+        return response
+
+    def put(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('purchase_id', type=int)
+        args = parser.parse_args()
+
+        response = ctrlr.cancel_purchase(args['purchase_id'])
         return response
 
     def delete(self):

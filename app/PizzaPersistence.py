@@ -23,23 +23,20 @@ cnx = mysql.connector.connect(**config)
 
 cursor = cnx.cursor()
 
-
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_pizzas():
     query = ("SELECT Pizza.pizza_id, "
              "Pizza.pizza_name, "
-             "Pizza.pizza_price_euros, "
-             "Pizza.pizza_price_cents, "
              "Topping.topping_name,"
              "Topping.vegetarian FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
-             "INNER JOIN Topping on ToppingMapping.topping_id = Topping.topping_id;")
+             "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id;")
     cursor.execute(query)
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
     # are geting mapped to the corresponding pizza
     allPizzas = []
-    for (pizza_id, pizza_name, pizza_price_euros, pizza_price_cents, topping_name, vegetarian) in cursor:
+    for (pizza_id, pizza_name, topping_name, vegetarian) in cursor:
         already_exists = False
         for check_pizza in allPizzas:
             if check_pizza.pizza_id == pizza_id:
@@ -47,11 +44,13 @@ def get_all_pizzas():
                 already_exists = True
         if already_exists:
             pointer.toppings.append(topping_name)
-            if vegetarian == False:
+            if not vegetarian:
                 pointer.vegetarian = False
         else:
             allPizzas.append(
-                Pizza(pizza_id, pizza_name, pizza_price_euros, [topping_name], bool(vegetarian)))  # add toppings
+                Pizza(pizza_id, pizza_name, [topping_name], bool(vegetarian)))  # add toppings
+    # Add prices
+    assign_pizza_prices(allPizzas)
     return allPizzas
 
 
@@ -62,7 +61,7 @@ def get_pizza(current_pizza_id):
              "Pizza.pizza_price_cents, "
              "Topping.topping_name FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
-             "INNER JOIN Topping on ToppingMapping.topping_id = Topping.topping_id"
+             "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id"
              "WHERE Pizza.pizza_id = 2;")
     cursor.execute(query, (current_pizza_id,))
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
@@ -78,17 +77,31 @@ def get_pizza(current_pizza_id):
             pointer.toppings.append(topping_name)
         else:
             result_pizza = Pizza(pizza_id, pizza_name, pizza_price_euros, [topping_name])  # add toppings
+
+    allPizzas = [result_pizza]
+    assign_pizza_prices(allPizzas)
     return result_pizza
+
+
+def assign_pizza_prices(allPizzas):
+    for current_pizza in allPizzas:
+        query = ("SELECT SUM(topping_price) AS topping_price_sum FROM Pizza "
+                 "JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
+                 "JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id "
+                 "WHERE Pizza.pizza_id = %s;")
+        cursor.execute(query, (current_pizza.pizza_id,))
+        topping_cost_sum = cursor.fetchone()[0]
+        current_pizza.cost = topping_cost_sum * 1.4
 
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_desserts():
     query = (
-        "SELECT dessert_id, dessert_name, dessert_price_euros, dessert_price_cents FROM Dessert;")
+        "SELECT dessert_id, dessert_name, dessert_price FROM Dessert;")
     cursor.execute(query)
     allDeserts = []
-    for (dessert_id, dessert_name, dessert_price_euros, dessert_price_cents) in cursor:
-        allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price_euros))  # add toppings
+    for (dessert_id, dessert_name, dessert_price) in cursor:
+        allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price))  # add toppings
     return allDeserts
 
 
@@ -96,20 +109,21 @@ def get_all_desserts():
 
 def get_all_drinks():
     query = (
-        "SELECT drink_id, drink_name, drink_price_euros, drink_price_cents FROM Drink;")  # need to add join for toppings
+        "SELECT drink_id, drink_name, drink_price FROM Drink;")  # need to add join for toppings
     cursor.execute(query)
     allDrinks = []
-    for (drink_id, drink_name, drink_price_euros, drink_price_cents) in cursor:
-        allDrinks.append(Drink(drink_id, drink_name, drink_price_euros))  # add toppings
+    for (drink_id, drink_name, drink_price) in cursor:
+        allDrinks.append(Drink(drink_id, drink_name, drink_price))  # add toppings
     return allDrinks
 
 
 # ----------------------------------------------------------------------------------------------------------------------
 
-'''
-Requires: customer.name, customer.address, customer.phone
-'''
+
 def create_customer(customer):
+    """
+    Requires: customer.name, customer.address, customer.phone
+    """
     query = ("INSERT INTO Customer (name, address_id, phone_number)"
              "VALUES (%s, %s, %s);")
 
@@ -127,9 +141,12 @@ def get_customer(id):
     cursor.execute(query, (id,))
     result = cursor.fetchone()
     customer_address = get_address(result[2])
-    return Customer(result[0], result[1], customer_address, result[3])
+    if customer_address is None:
+        return None
+    else:
+        return Customer(result[1], customer_address, result[3], result[0])
 
-def customer_exists(customer):
+def customer_exists(customer) -> bool():
     query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s AND phone_number = %s;")
     cursor.execute(query, (customer.name, customer.phone))
     row_number = cursor.fetchall()
@@ -139,33 +156,53 @@ def customer_exists(customer):
     else:
         return False
 
+def add_to_customer_pizzas_total(no_of_pizzas) -> None:
+    """ Adds the number of pizzas to the customer's total number"""
+    pass
+
+def get_customer_pizzas_total(customer_id) -> int:
+    """ Gets the number of pizzas to the customer's total number"""
+    return 10
+
+def remove_from_customer_pizzas_total(no_of_pizzas) -> None:
+    """ Removes the number of pizzas from the customer's total"""
+    pass
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_purchase(purchase):
-    query = ("INSERT INTO Purchase (purchased_at, customer_id) VALUES (NOW(), %s);")
+    # check for valid customer id
+    query = ("SELECT customer_id FROM Customer WHERE customer_id = %s;")
     cursor.execute(query, (purchase.customer_id,))
-    purchase_id = cursor.lastrowid
-    new_purchase = copy.deepcopy(purchase)
-    query = ("SELECT purchased_at FROM Purchase WHERE purchase_id = %s")
-    cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
-    new_purchase.datetime = result[0]
-    new_purchase.purchase_id = purchase_id
+    if result is None:
+        return None
+    else:
+        # insert customer
+        query = ("INSERT INTO Purchase (purchased_at, customer_id) VALUES (NOW(), %s);")
+        cursor.execute(query, (purchase.customer_id,))
+        purchase_id = cursor.lastrowid
+        new_purchase = copy.deepcopy(purchase)
+        query = ("SELECT purchased_at FROM Purchase WHERE purchase_id = %s")
+        cursor.execute(query, (purchase_id,))
+        result = cursor.fetchone()
+        new_purchase.datetime = result[0]
+        new_purchase.purchase_id = purchase_id
 
-    for current_pizza in purchase.pizzas:
-        query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_pizza['pizza_id'], current_pizza['quantity']))
+        for current_pizza in purchase.pizzas:
+            query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id, quantity) VALUES (%s, %s, %s);")
+            cursor.execute(query, (purchase_id, current_pizza['pizza_id'], current_pizza['quantity']))
 
-    for current_drink in purchase.drinks:
-        query = ("INSERT INTO DrinkMapping (purchase_id, drink_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_drink['drink_id'], current_drink['quantity']))
+        for current_drink in purchase.drinks:
+            query = ("INSERT INTO DrinkMapping (purchase_id, drink_id, quantity) VALUES (%s, %s, %s);")
+            cursor.execute(query, (purchase_id, current_drink['drink_id'], current_drink['quantity']))
 
-    for current_dessert in purchase.desserts:
-        query = ("INSERT INTO DessertMapping (purchase_id, dessert_id, quantity) VALUES (%s, %s, %s);")
-        cursor.execute(query, (purchase_id, current_dessert['dessert_id'], current_dessert['quantity']))
+        for current_dessert in purchase.desserts:
+            query = ("INSERT INTO DessertMapping (purchase_id, dessert_id, quantity) VALUES (%s, %s, %s);")
+            cursor.execute(query, (purchase_id, current_dessert['dessert_id'], current_dessert['quantity']))
 
-    cnx.commit()
-    return new_purchase
+        cnx.commit()
+        return new_purchase
 
 
 def get_purchase(purchase_id):
@@ -190,7 +227,6 @@ def get_purchase(purchase_id):
     for (drink_id, quantity) in cursor:
         new_purchase.drinks.append({"drink_id": drink_id,
                                     "quantity": quantity})
-
     #Query desserts
     query = ("SELECT DessertMapping.dessert_id, DessertMapping.quantity FROM Purchase "
              "JOIN DessertMapping ON Purchase.purchase_id = DessertMapping.purchase_id WHERE Purchase.purchase_id = %s;")
@@ -201,12 +237,52 @@ def get_purchase(purchase_id):
 
     return new_purchase
 
+
 def delete_purchase(purchase_id):
     deleted_order = get_purchase(purchase_id)
     query = ("DELETE FROM Purchase WHERE purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
     cnx.commit()
     return deleted_order
+
+
+def purchase_exists(purchase_id) -> bool():
+    """ Return True if the purchase exists AND has not been closed yet, else return False """
+    query = ("SELECT purchase_id FROM Purchase WHERE purchase_id = %s;")
+    cursor.execute(query, (purchase_id,))
+    result = cursor.fetchone()
+    if result is None:
+        return False
+    else:
+        return True
+    return True
+
+
+def get_undelivered_purchases():
+    """ Return a list of purchases that have not been delivered, return None if none exist """
+    query = ("SELECT purchase_id FROM Purchase;")
+    cursor.execute(query)
+    undelivered_purchases = []
+    result = cursor.fetchall()
+    if result is None:
+        return None
+    else:
+        for (purchase_id,) in result:
+            undelivered_purchases.append(get_purchase(purchase_id))
+    return undelivered_purchases
+
+
+def update_purchase_status(purchase_id, dispatched_time):
+    """ Sets the purchase of """
+    query = ("UPDATE Purchase SET purchased_at = %s WHERE purchase_id = %s;")
+    cursor.execute(query, (dispatched_time, purchase_id))
+
+
+def set_delivery_driver(purchase_id, driver_id):
+    """ For purchase with the id `purchase_id` set driver to id `driver_id` """
+    query = ("UPDATE Purchase SET delivery_driver_id = %s WHERE purchase_id = %s")
+    cursor.execute(query, (driver_id, purchase_id))
+
 
 # ----------------------------------------------------------------------------------------------------------------------
 
@@ -233,6 +309,22 @@ def update_delivery_driver(delivery_driver, status):
     cnx.commit()
     return new_delivery_driver
 
+
+""" Return a list of all available drivers for postcode `postcode` """
+def get_available_drivers(postcode):
+    all_available_drivers = []
+    query = ("SELECT driver_id, operating_area, on_task, name FROM DeliveryDriver "
+             "WHERE operating_area = %s AND on_task = FALSE;")
+    cursor.execute(query, (postcode,))
+    result = cursor.fetchall()
+    if result is None:
+        return all_available_drivers
+    else:
+        for (driver_id, operating_area, on_task, name) in result:
+            all_available_drivers.append(DeliveryDriver(driver_id, operating_area, on_task, name))
+        return all_available_drivers
+
+
 # ----------------------------------------------------------------------------------------------------------------------
 
 def create_address(address):
@@ -249,28 +341,45 @@ def create_address(address):
 
 
 def get_address(id):
-    query = ("SELECT address_id. street, town, postcode FROM Address WHERE address_id = %s;")
+    query = ("SELECT address_id, street, town, postcode FROM Address WHERE address_id = %s;")
     cursor.execute(query, (id,))
     result = cursor.fetchone()
-    return Address(result[0], result[1], result[2], result[3])
+    if result is None:
+        return None
+    else:
+        return Address(result[1], result[2], result[3], result[0])
 
+# ----------------------------------------------------------------------------------------------------------------------
 
+def generate_discount_code() -> str:
+    """ Create a new discount code and set it's boolean flag to `Valid=True` """
+    return "CODE123"
+
+def valid_discount_code(code) -> bool:
+    """ Check if the code has been used, return True if it is valid """
+    if code == "CODE123":
+        return True
+    else:
+        return False
+
+def set_discount_code_invalid(code):
+    """ Set the code to invalid"""
 # ----------------------------------------------------------------------------------------------------------------------
 
 # Main function to test query methods
 if __name__ == '__main__':
     for pizza in get_all_pizzas():
-        print(pizza.pizza_id, pizza.name, pizza.toppings, pizza.vegetarian)
+        print(pizza.pizza_id, pizza.name, pizza.cost, pizza.toppings, pizza.vegetarian)
 
     print("---")
 
     for drink in get_all_drinks():
-        print(drink.drink_id, drink.name)
+        print(drink.drink_id, drink.name, drink.cost)
 
     print("---")
 
     for dessert in get_all_desserts():
-        print(dessert.dessert_id, dessert.name)
+        print(dessert.dessert_id, dessert.name, dessert.cost)
 
     print("---")
 
