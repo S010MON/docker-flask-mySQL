@@ -117,6 +117,8 @@ def post_purchase(purchase):
             purchase.discount_code = db.generate_discount_code()
             db.remove_from_customer_pizzas_total(10)
 
+    purchase.total_cost = 10
+
     data = db.create_purchase(purchase)
     if data is None:
         return jsonify(message="Failed to create order",
@@ -189,7 +191,7 @@ def update_orders():
             if len(drivers) >= 1:
                 db.set_delivery_driver(purchase.purchase_id, drivers[0].driver_id)
                 db.update_order_dispatched(purchase.purchase_id, datetime.now())
-                print('Order: ' + purchase.purchase_id + ' dispatched', flush=True)
+                print('Order: ' + str(purchase.purchase_id) + ' dispatched', flush=True)
     print('Orders updated', flush=True)
 
 
