@@ -117,7 +117,7 @@ def post_purchase(purchase):
             purchase.discount_code = db.generate_discount_code()
             db.remove_from_customer_pizzas_total(10)
 
-    purchase.total_cost = 10
+    purchase.total_cost = 10 # TODO This is a hardcode fix -> return from DB not working
 
     data = db.create_purchase(purchase)
     if data is None:
