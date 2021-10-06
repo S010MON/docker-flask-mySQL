@@ -72,7 +72,7 @@ def get_purchase_by_id(purchase_id):
     if data is None:
         return not_found_404()
     else:
-        return jsonify(message="purchase",
+        return jsonify(message="purchase found",
                        category="success",
                        data=data,
                        status=200)
@@ -138,7 +138,7 @@ def post_purchase(purchase):
                        status=400)
 
     data = data.to_dict()
-    return jsonify(message="pizzas",
+    return jsonify(message="order created",
                    category="success",
                    data=data,
                    status=201)
@@ -159,7 +159,7 @@ def cancel_purchase(purchase_id):
                        status=400)
 
     db.update_purchase_status(purchase_id, "cancelled")
-    return jsonify(message="Order Deleted",
+    return jsonify(message="Order cancelled",
                    category="success",
                    data=purchase.to_dict(),
                    status=200)
