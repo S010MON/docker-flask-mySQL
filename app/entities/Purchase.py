@@ -23,10 +23,10 @@ class Purchase:
         if self.total_cost is not None:
             total_cost = round(self.total_cost, 3)
 
-        return {"purchase_id": self.purchase_id,
+        return {"order_id": self.purchase_id,
                 "time_ordered": self.datetime,
                 "time_estimated_delivery": self.estimated_delivery_time,
-                "customer": self.customer_id,
+                "customer_id": self.customer_id,
                 "pizzas": self.pizzas,
                 "drinks": self.drinks,
                 "desserts": self.desserts,

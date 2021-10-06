@@ -17,5 +17,5 @@ class Customer:
         return {"customer_id": self.customer_id,
                 "name": self.name, 
                 "address": address,
-                "phone": self.phone}
+                "phone_number": self.phone}
 
