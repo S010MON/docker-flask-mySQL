@@ -118,7 +118,7 @@ def post_purchase(purchase):
 
     purchase.total_cost = 10 # TODO This is a hardcode fix -> return from DB not working
 
-    if not db.valid_discount_code(purchase.discount_code):
+    if purchase.discount_code is not None and not db.valid_discount_code(purchase.discount_code):
         return jsonify(message="invalid discount code",
                        category="failed",
                        status=400)
