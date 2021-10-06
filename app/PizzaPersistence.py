@@ -140,6 +140,8 @@ def get_customer(id):
     query = ("SELECT customer_id, name, address_id, phone_number FROM Customer WHERE customer_id = %s")
     cursor.execute(query, (id,))
     result = cursor.fetchone()
+    if result is None:
+        return None
     customer_address = get_address(result[2])
     if customer_address is None:
         return None
@@ -155,6 +157,17 @@ def customer_exists(customer) -> bool():
         return True
     else:
         return False
+
+def customer_exists_by_id(customer_id) -> bool():
+    query = ("SELECT customer_id, name, address_id FROM Customer WHERE name = %s;")
+    cursor.execute(query, customer_id)
+    row_number = cursor.fetchall()
+    results = len(row_number)
+    if results > 0:
+        return True
+    else:
+        return False
+
 
 def add_to_customer_pizzas_total(no_of_pizzas) -> None:
     """ Adds the number of pizzas to the customer's total number"""
@@ -353,7 +366,7 @@ def get_address(id):
 
 def generate_discount_code() -> str:
     """ Create a new discount code and set it's boolean flag to `Valid=True` """
-    return "CODE123"
+    return "CODE456"
 
 def valid_discount_code(code) -> bool:
     """ Check if the code has been used, return True if it is valid """

@@ -93,6 +93,13 @@ def post_customer(customer):
 
 
 def post_purchase(purchase):
+    customer = db.get_customer(purchase.customer_id)
+    if customer is None:
+        return jsonify(message="customer does not exist",
+                       category="failed",
+                       data=None,
+                       status=400)
+
     if purchase.pizzas is None:
         return jsonify(message="order must contain a pizza",
                        category="failed",
@@ -109,15 +116,20 @@ def post_purchase(purchase):
                        category="failed",
                        status=400)
 
-    if db.valid_discount_code(purchase.discount_code):
+    purchase.total_cost = 10 # TODO This is a hardcode fix -> return from DB not working
+
+    if not db.valid_discount_code(purchase.discount_code):
+        return jsonify(message="invalid discount code",
+                       category="failed",
+                       status=400)
+    elif db.valid_discount_code(purchase.discount_code):
         purchase.total_cost = purchase.total_cost * 1.09
+        purchase.discount_code = None
     else:
         db.add_to_customer_pizzas_total(len(purchase.pizzas))
         if db.get_customer_pizzas_total(purchase.customer_id):
             purchase.discount_code = db.generate_discount_code()
             db.remove_from_customer_pizzas_total(10)
-
-    purchase.total_cost = 10 # TODO This is a hardcode fix -> return from DB not working
 
     data = db.create_purchase(purchase)
     if data is None:
