@@ -192,7 +192,7 @@ def create_purchase(purchase):
         return None
     else:
         # insert customer
-        query = ("INSERT INTO Purchase (purchased_at, customer_id) VALUES (NOW(), %s);")
+        query = ("INSERT INTO Purchase (purchased_at, customer_id, status) VALUES (NOW(), %s, 'accepted');")
         cursor.execute(query, (purchase.customer_id,))
         purchase_id = cursor.lastrowid
         new_purchase = copy.deepcopy(purchase)
@@ -201,6 +201,7 @@ def create_purchase(purchase):
         result = cursor.fetchone()
         new_purchase.datetime = result[0]
         new_purchase.purchase_id = purchase_id
+        new_purchase.status = "accepted"
 
         for current_pizza in purchase.pizzas:
             query = ("INSERT INTO PizzaMapping (purchase_id, pizza_id, quantity) VALUES (%s, %s, %s);")
@@ -219,13 +220,14 @@ def create_purchase(purchase):
 
 
 def get_purchase(purchase_id):
-    query = ("SELECT purchase_id, purchased_at, customer_id, delivery_driver_id FROM Purchase WHERE purchase_id = %s;")
+    query = ("SELECT purchase_id, purchased_at, customer_id, delivery_driver_id, status FROM Purchase WHERE purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
     new_purchase = Purchase(result[2], [], [], [])
     new_purchase.datetime = result[1]
     new_purchase.purchase_id = purchase_id
     new_purchase.delivery_driver_id = result[3]
+    new_purchase.status = result[4]
     # Query pizzas
     query = ("SELECT PizzaMapping.pizza_id, PizzaMapping.quantity FROM Purchase "
              "JOIN PizzaMapping ON Purchase.purchase_id = PizzaMapping.purchase_id WHERE Purchase.purchase_id = %s;")
@@ -258,9 +260,8 @@ def delete_purchase(purchase_id):
     cnx.commit()
     return deleted_order
 
-
+""" Return True if the purchase exists AND has not been closed yet, else return False """
 def purchase_exists(purchase_id) -> bool():
-    """ Return True if the purchase exists AND has not been closed yet, else return False """
     query = ("SELECT purchase_id FROM Purchase WHERE purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
@@ -270,9 +271,8 @@ def purchase_exists(purchase_id) -> bool():
         return True
     return True
 
-
+""" Return a list of purchases that have not been delivered, return None if none exist """
 def get_undelivered_purchases():
-    """ Return a list of purchases that have not been delivered, return None if none exist """
     query = ("SELECT purchase_id FROM Purchase;")
     cursor.execute(query)
     undelivered_purchases = []

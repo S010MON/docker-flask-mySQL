@@ -22,28 +22,36 @@ CREATE TABLE ToppingMapping (
     topping_map_id INT NOT NULL AUTO_INCREMENT,
     pizza_id INT NOT NULL,
     topping_id INT NOT NULL,
-    PRIMARY KEY (topping_map_id));
+    PRIMARY KEY (topping_map_id),
+    FOREIGN KEY (pizza_id) REFERENCES Pizza(pizza_id),
+    FOREIGN KEY (topping_id) REFERENCES Topping(topping_id));
 
 CREATE TABLE PizzaMapping (
     pizza_map_id INT NOT NULL AUTO_INCREMENT,
     purchase_id INT NOT NULL,
     pizza_id INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (pizza_map_id));
+    PRIMARY KEY (pizza_map_id),
+    FOREIGN KEY (purchase_id) REFERENCES Purchase(purchase_id),
+    FOREIGN KEY (pizza_id) REFERENCES Pizza(pizza_id));
 
 CREATE TABLE DrinkMapping (
     drink_map_id INT NOT NULL AUTO_INCREMENT,
-    drink_id INT NOT NULL,
     purchase_id INT NOT NULL,
+    drink_id INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (drink_map_id));
+    PRIMARY KEY (drink_map_id),
+    FOREIGN KEY (purchase_id) REFERENCES Purchase(purchase_id),
+    FOREIGN KEY (drink_id) REFERENCES Drink(drink_id));
 
 CREATE TABLE DessertMapping (
     dessert_map_id INT NOT NULL AUTO_INCREMENT,
     purchase_id INT NOT NULL,
     dessert_id INT NOT NULL,
     quantity INT NOT NULL,
-    PRIMARY KEY (dessert_map_id));
+    PRIMARY KEY (dessert_map_id),
+    FOREIGN KEY (purchase_id) REFERENCES Purchase(purchase_id),
+    FOREIGN KEY (dessert_id) REFERENCES Dessert(dessert_id));
 
 CREATE TABLE Topping (
     topping_id INT NOT NULL AUTO_INCREMENT,
@@ -57,7 +65,10 @@ CREATE TABLE Purchase (
     purchased_at DATETIME NOT NULL,
     customer_id INT NOT NULL,
     delivery_driver_id INT,
-    primary key (purchase_id));
+    status VARCHAR(255) NOT NULL, # accepted, dispatched, delivered
+    PRIMARY KEY (purchase_id),
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id),
+    FOREIGN KEY (delivery_driver_id) REFERENCES DeliveryDriver(driver_id));
 
 CREATE TABLE Customer (
     customer_id INT NOT NULL AUTO_INCREMENT,
