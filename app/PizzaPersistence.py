@@ -64,7 +64,7 @@ def get_pizza(current_pizza_id):
     # are geting mapped to the corresponding pizza
     first_entry = cursor.fetchone()
     vegetarian = first_entry[3]
-    result_pizza = Pizza(first_entry[0], first_entry[1], first_entry[2], vegetarian)
+    result_pizza = Pizza(first_entry[0], first_entry[1], [first_entry[2]], vegetarian)
     rest_entries = cursor.fetchall()
     for entry in rest_entries:
         result_pizza.toppings.append(entry[2])
