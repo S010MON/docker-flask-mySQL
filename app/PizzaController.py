@@ -116,7 +116,7 @@ def post_purchase(purchase):
                        category="failed",
                        status=400)
 
-    purchase.total_cost = 10 # TODO This is a hardcode fix -> return from DB not working
+    purchase.total_cost = db.get_pizza(2).cost
 
     if purchase.discount_code is not None and not db.valid_discount_code(purchase.discount_code):
         return jsonify(message="invalid discount code",
@@ -206,6 +206,24 @@ def update_orders():
                 print('Order: ' + str(purchase.purchase_id) + ' dispatched', flush=True)
     print('Orders updated', flush=True)
 
+def get_all_orders():
+    data = []
+    for order in db.get_undelivered_purchases():
+        data.append(order.to_dict())
+    return jsonify(message="All Orders",
+                   category="success",
+                   data=data,
+                   status=200)
+
+def calculate_total_cost(purchase) -> int:
+    total_cost = 0
+    for i in purchase.pizzas:
+        total_cost = total_cost + db.get_pizza(i['pizza_id']).cost * i['quantity']
+    for i in purchase.drinks:
+        total_cost = total_cost + db.get_pizza(i['pizza_id']).cost * i['quantity']
+    for i in purchase.desserts:
+        total_cost = total_cost + db.get_pizza(i['pizza_id']).cost * i['quantity']
+    return total_cost
 
 def not_found_404():
     return jsonify(message="Not found",

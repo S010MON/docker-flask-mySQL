@@ -104,6 +104,11 @@ class Purchase(Resource):
         return response
 
 
+class Debug(Resource):
+    def get(self):
+        return ctrlr.get_all_orders()
+
+
 @scheduler.task('interval', id='update_orders', minutes=5, misfire_grace_time=30)
 def update_orders():
     ctrlr.update_orders()
@@ -115,6 +120,7 @@ api.add_resource(Drink, '/drink')
 api.add_resource(Dessert, '/dessert')
 api.add_resource(Customer, '/customer')
 api.add_resource(Purchase, '/purchase')
+api.add_resource(Debug, '/debug')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
