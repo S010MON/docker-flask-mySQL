@@ -153,8 +153,8 @@ INSERT INTO ToppingMapping(pizza_id, topping_id) VALUES (10, 11); -- Calzone, Ba
 INSERT INTO ToppingMapping(pizza_id, topping_id) VALUES (10, 4); -- Calzone, Bacon
 
 -- Add delivery drivers
-INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("6226GJ", FALSE, "Christof");
-INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("4202MS", FALSE, "Peter");
-INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("5683CG", FALSE, "Tom");
-INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("6221AG", FALSE, "Pietro");
-INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("5701BG", FALSE, "Enrique");
+INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("AA1234", FALSE, "Christof");
+INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("AA1234", FALSE, "Peter");
+INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("AA1234", FALSE, "Tom");
+INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("AA1234", FALSE, "Pietro");
+INSERT INTO DeliveryDriver(operating_area, on_task, name) VALUES ("AA1234", FALSE, "Enrique");
