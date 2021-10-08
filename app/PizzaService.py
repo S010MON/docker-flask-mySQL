@@ -93,10 +93,10 @@ class Purchase(Resource):
 
     def put(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('order_id', type=int)
+        parser.add_argument('purchase_id', type=int)
         args = parser.parse_args()
 
-        response = ctrlr.cancel_purchase(args['order_id'])
+        response = ctrlr.cancel_purchase(args['purchase_id'])
         return response
 
     def delete(self):
