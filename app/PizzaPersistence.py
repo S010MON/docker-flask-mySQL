@@ -55,11 +55,9 @@ def get_all_pizzas():
 
 
 def get_pizza(current_pizza_id):
-    query = ("SELECT Pizza.pizza_id, "
-             "Pizza.pizza_name, "
-             "Topping.topping_name FROM Pizza "
+    query = ("SELECT Pizza.pizza_id, Pizza.pizza_name, Topping.topping_name FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
-             "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id"
+             "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id "
              "WHERE Pizza.pizza_id = %s;")
     cursor.execute(query, (current_pizza_id,))
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
@@ -89,7 +87,7 @@ def assign_pizza_prices(allPizzas):
                  "WHERE Pizza.pizza_id = %s;")
         cursor.execute(query, (current_pizza.pizza_id,))
         topping_cost_sum = cursor.fetchone()[0]
-        current_pizza.cost = topping_cost_sum * 1.4
+        current_pizza.cost = topping_cost_sum * 1.4 * 1.09
 
 # ----------------------------------------------------------------------------------------------------------------------
 
