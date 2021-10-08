@@ -83,16 +83,21 @@ class Purchase(Resource):
         parser.add_argument('discount_code', type=str)
         args = parser.parse_args()
         
-        purchase = Purchase_obj(args['customer_id'], args['pizzas'], args['drinks'], args['desserts'], args['discount_code'])
+        purchase = Purchase_obj(args['customer_id'],
+                                args['pizzas'],
+                                args['drinks'],
+                                args['desserts'],
+                                discount_code=args['discount_code'])
+        print('Discount code service: ' + str(args['discount_code']), flush=True)
         response = ctrlr.post_purchase(purchase)
         return response
 
     def put(self):
         parser = reqparse.RequestParser()
-        parser.add_argument('purchase_id', type=int)
+        parser.add_argument('order_id', type=int)
         args = parser.parse_args()
 
-        response = ctrlr.cancel_purchase(args['purchase_id'])
+        response = ctrlr.cancel_purchase(args['order_id'])
         return response
 
     def delete(self):
