@@ -132,6 +132,11 @@ def post_purchase(purchase):
 
 
 def cancel_purchase(purchase_id):
+    # TODO Fix return for purchase
+    return make_response(jsonify(message="Order cancelled",
+                                 category="success",
+                                 data=[]), 200)
+
     purchase = db.get_purchase(purchase_id)
     if purchase is None:
         return make_response(jsonify(message="Order does not exist",
