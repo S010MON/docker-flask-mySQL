@@ -60,7 +60,7 @@ def get_pizza(current_pizza_id):
              "Topping.topping_name FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
              "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id"
-             "WHERE Pizza.pizza_id = 2;")
+             "WHERE Pizza.pizza_id = %s;")
     cursor.execute(query, (current_pizza_id,))
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
     # are geting mapped to the corresponding pizza
