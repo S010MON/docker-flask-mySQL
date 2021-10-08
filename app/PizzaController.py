@@ -197,7 +197,7 @@ def update_orders():
         print('Order ' + str(purchase.purchase_id) + ' ordered at ' + str(purchase.datetime), flush=True)
 
         if dispatch_time > datetime.now():
-            print('Looking for driver for order' + str(purchase.purchase_id), flush=True)
+            print('Looking for driver for order ' + str(purchase.purchase_id), flush=True)
             customer = db.get_customer(purchase.customer_id)
             drivers = db.get_available_drivers(customer.address.postcode)
 
