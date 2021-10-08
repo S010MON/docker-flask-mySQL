@@ -62,18 +62,11 @@ def get_pizza(current_pizza_id):
     cursor.execute(query, (current_pizza_id,))
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
     # are geting mapped to the corresponding pizza
-    result_pizza = None
-    for (pizza_id, pizza_name, topping_name) in cursor:
-        already_exists = False
-        for check_pizza in result_pizza:
-            if check_pizza.pizza_id == pizza_id:
-                pointer = check_pizza
-                already_exists = True
-        if already_exists:
-            pointer.toppings.append(topping_name)
-        else:
-            result_pizza = Pizza(pizza_id, pizza_name, [topping_name])  # add toppings
-
+    first_entry = cursor.fetchone()
+    result_pizza = Pizza(first_entry[0], first_entry[1], first_entry[2])
+    rest_entries = cursor.fetchall()
+    for entry in rest_entries:
+        result_pizza.toppings.append(entry[2])
     allPizzas = [result_pizza]
     assign_pizza_prices(allPizzas)
     return result_pizza
