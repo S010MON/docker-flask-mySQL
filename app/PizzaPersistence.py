@@ -228,6 +228,8 @@ def create_purchase(purchase):
 
 
 def get_purchase(purchase_id):
+    if type(purchase_id) is not int:
+        return None
     query = ("SELECT purchase_id, purchased_at, customer_id, delivery_driver_id, status FROM Purchase WHERE purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
     result = cursor.fetchone()
