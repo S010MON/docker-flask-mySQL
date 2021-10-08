@@ -116,7 +116,7 @@ def get_all_drinks():
 
 
 def get_drink(current_drink_id):
-    query = ("SELECT drink_id, drink_name, drink_price FROM Drink;")
+    query = ("SELECT drink_id, drink_name, drink_price FROM Drink WHERE drink_id = %s;")
     cursor.execute(query, (current_drink_id,))
     result = cursor.fetchone()
     return Drink(result[0], result[1], result[2])
