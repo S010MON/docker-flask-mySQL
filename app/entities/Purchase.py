@@ -24,7 +24,7 @@ class Purchase:
         if self.total_cost is not None:
             total_cost = round(self.total_cost, 2)
 
-        return {"order_id": self.purchase_id,
+        return {"purchase_id": self.purchase_id,
                 "time_ordered": self.datetime,
                 "time_estimated_delivery": self.estimated_delivery_time,
                 "customer_id": self.customer_id,

@@ -20,8 +20,8 @@ def get_all_pizzas():
         data.append(pizzas[i].to_dict())
 
     return make_response(jsonify(message="pizzas",
-                   category="success",
-                   data=data), 200)
+                                 category="success",
+                                 data=data), 200)
 
 
 def get_all_drinks():
@@ -34,8 +34,8 @@ def get_all_drinks():
         data.append(drinks[i].to_dict())
 
     return make_response(jsonify(message="drinks",
-                   category="success",
-                   data=data), 200)
+                                 category="success",
+                                 data=data), 200)
 
 
 def get_all_desserts():
@@ -48,8 +48,8 @@ def get_all_desserts():
         data.append(desserts[i].to_dict())
 
     return make_response(jsonify(message="Sweet Sweets!",
-                   category="success",
-                   data=data), 200)
+                                 category="success",
+                                 data=data), 200)
 
 
 def get_customer_by_id(customer_id):
@@ -59,8 +59,8 @@ def get_customer_by_id(customer_id):
 
     data = customer.to_dict()
     return make_response(jsonify(message="customer found",
-                   category="success",
-                   data=data), 200)
+                                 category="success",
+                                 data=data), 200)
 
 
 def get_purchase_by_id(purchase_id):
@@ -69,8 +69,8 @@ def get_purchase_by_id(purchase_id):
         return not_found_404()
     else:
         return make_response(jsonify(message="purchase found",
-                       category="success",
-                       data=data), 200)
+                                     category="success",
+                                     data=data), 200)
 
 
 def post_customer(customer):
@@ -81,29 +81,29 @@ def post_customer(customer):
         customer.address = db.create_address(customer.address)
         data = db.create_customer(customer).to_dict()
         return make_response(jsonify(message="customer added",
-                       category="success",
-                       data=data), 201)
+                                     category="success",
+                                     data=data), 201)
 
 
 def post_purchase(purchase):
     customer = db.get_customer(purchase.customer_id)
     if customer is None:
         return make_response(jsonify(message="customer does not exist",
-                       category="failed",
-                       data=None), 400)
+                                     category="failed",
+                                     data=None), 400)
 
     if purchase.pizzas is None:
         return make_response(jsonify(message="order must contain a pizza",
-                       category="failed",
-                       data=None), 400)
+                                     category="failed",
+                                     data=None), 400)
 
     if purchase.customer_id is None:
         return make_response(jsonify(message="customer does not exist",
-                       category="failed"), 400)
+                                     category="failed"), 400)
 
     if db.get_customer(purchase.customer_id) is None:
         return make_response(jsonify(message="customer does not exist",
-                       category="failed"), 400)
+                                     category="failed"), 400)
 
     purchase.total_cost = calculate_total_cost(purchase)
 
@@ -115,7 +115,7 @@ def post_purchase(purchase):
 
     elif not db.valid_discount_code(purchase.discount_code):
         return make_response(jsonify(message="invalid discount code",
-                       category="failed"), 400)
+                                     category="failed"), 400)
     else:
         purchase.total_cost = purchase.total_cost * 0.9
         purchase.discount_code = None
@@ -123,49 +123,50 @@ def post_purchase(purchase):
     data = db.create_purchase(purchase)
     if data is None:
         return make_response(jsonify(message="Failed to create order",
-                       category="failed"), 400)
+                                     category="failed"), 400)
 
     data = data.to_dict()
     return make_response(jsonify(message="order created",
-                   category="success",
-                   data=data), 201)
+                                 category="success",
+                                 data=data), 201)
+
 
 def cancel_purchase(purchase_id):
     purchase = db.get_purchase(purchase_id)
     if purchase is None:
         return make_response(jsonify(message="Order does not exist",
-                       category="failed",
-                       data=None), 404)
+                                     category="failed",
+                                     data=None), 404)
 
     last_minute = purchase.datetime + timedelta(minutes=5)
     if datetime.now() > last_minute:
         return make_response(jsonify(message="Cannot Cancel Order",
-                       category="failed",
-                       data=purchase.to_dict()), 400)
+                                     category="failed",
+                                     data=purchase.to_dict()), 400)
 
     db.update_purchase_status(purchase_id, "cancelled")
     return make_response(jsonify(message="Order cancelled",
-                   category="success",
-                   data=purchase.to_dict()), 200)
+                                 category="success",
+                                 data=purchase.to_dict()), 200)
 
 
 def delete_purchase(purchase_id):
     purchase = db.get_purchase(purchase_id)
     if purchase is None:
         return make_response(jsonify(message="Order does not exist",
-                       category="failed",
-                       data=None), 404)
+                                     category="failed",
+                                     data=None), 404)
 
     last_minute = purchase.datetime + timedelta(minutes=5)
     if datetime.now() > last_minute:
         return make_response(jsonify(message="Cannot Cancel Order",
-                       category="failed",
-                       data=purchase.to_dict()), 400)
+                                     category="failed",
+                                     data=purchase.to_dict()), 400)
 
     else:
         return make_response(jsonify(message="Order Deleted",
-                       category="success",
-                       data=purchase.to_dict()), 200)
+                                     category="success",
+                                     data=purchase.to_dict()), 200)
 
 
 def update_orders():
@@ -196,8 +197,8 @@ def get_all_orders():
     for order in db.get_undelivered_purchases():
         data.append(order.to_dict())
     return make_response(jsonify(message="All Orders",
-                   category="success",
-                   data=data), 200)
+                                 category="success",
+                                 data=data), 200)
 
 
 def calculate_total_cost(purchase) -> int:
