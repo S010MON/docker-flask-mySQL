@@ -205,7 +205,10 @@ def update_orders():
                 db.set_delivery_driver(purchase.purchase_id, drivers[0].driver_id)
                 db.update_order_dispatched(purchase.purchase_id, datetime.now())
                 print('Order: ' + str(purchase.purchase_id) + ' dispatched', flush=True)
+            else:
+                print('No driver available', flush=True)
     print('Orders updated', flush=True)
+
 
 def get_all_orders():
     data = []
@@ -216,15 +219,19 @@ def get_all_orders():
                    data=data,
                    status=200)
 
+
 def calculate_total_cost(purchase) -> int:
     total_cost = 0
     for i in purchase.pizzas:
         total_cost = total_cost + (db.get_pizza(i['pizza_id']).cost * i['quantity'])
-    for i in purchase.drinks:
-        total_cost = total_cost + (db.get_drink(i['drink_id']).cost * i['quantity'])
-    for i in purchase.desserts:
-        total_cost = total_cost + (db.get_dessert(i['dessert_id']).cost * i['quantity'])
+    if purchase.drinks is not None:
+        for i in purchase.drinks:
+            total_cost = total_cost + (db.get_drink(i['drink_id']).cost * i['quantity'])
+    if purchase.desserts is not None:
+        for i in purchase.desserts:
+            total_cost = total_cost + (db.get_dessert(i['dessert_id']).cost * i['quantity'])
     return total_cost
+
 
 def not_found_404():
     return jsonify(message="Not found",
