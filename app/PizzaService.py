@@ -88,7 +88,6 @@ class Purchase(Resource):
                                 args['drinks'],
                                 args['desserts'],
                                 discount_code=args['discount_code'])
-        print('Discount code service: ' + str(args['discount_code']), flush=True)
         response = ctrlr.post_purchase(purchase)
         return response
 

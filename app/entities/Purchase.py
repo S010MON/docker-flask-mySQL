@@ -31,6 +31,7 @@ class Purchase:
                 "pizzas": self.pizzas,
                 "drinks": self.drinks,
                 "desserts": self.desserts,
+                "order_status": self.status,
                 "delivery_driver_id": self.delivery_driver_id,
                 "total_cost": total_cost,
-                "discount_code":self.discount_code}
+                "discount_code": self.discount_code}
