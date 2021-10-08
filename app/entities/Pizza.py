@@ -10,7 +10,7 @@ class Pizza:
     def to_dict(self):
         return {"pizza_id": self.pizza_id,
                 "name": self.name,
-                "cost": round(self.cost,3),
+                "cost": round(self.cost, 2),
                 "toppings": self.toppings,
                 "vegetarian": self.vegetarian}
 

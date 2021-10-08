@@ -22,7 +22,7 @@ class Purchase:
 
         total_cost = None
         if self.total_cost is not None:
-            total_cost = round(self.total_cost, 3)
+            total_cost = round(self.total_cost, 2)
 
         return {"order_id": self.purchase_id,
                 "time_ordered": self.datetime,
