@@ -242,31 +242,31 @@ def get_purchase(purchase_id):
     new_purchase.delivery_driver_id = result[3]
     new_purchase.status = result[4]
     # Query pizzas
-    query = ("SELECT PizzaMapping.pizza_id, PizzaMapping.quantity, Pizza.name FROM Purchase "
+    query = ("SELECT PizzaMapping.pizza_id, PizzaMapping.quantity, Pizza.pizza_name FROM Purchase "
              "JOIN PizzaMapping ON Purchase.purchase_id = PizzaMapping.purchase_id "
              "JOIN Pizza ON PizzaMapping.pizza_id = Pizza.pizza_id WHERE Purchase.purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
-    for (pizza_id, quantity, name) in cursor:
+    for (pizza_id, quantity, pizza_name) in cursor:
         new_purchase.pizzas.append({"pizza_id": pizza_id,
-                                    "name": name,
+                                    "name": pizza_name,
                                     "quantity": quantity})
     # Query drinks
-    query = ("SELECT DrinkMapping.drink_id, DrinkMapping.quantity, Drink.name FROM Purchase "
+    query = ("SELECT DrinkMapping.drink_id, DrinkMapping.quantity, Drink.drink_name FROM Purchase "
              "JOIN DrinkMapping ON Purchase.purchase_id = DrinkMapping.purchase_id "
              "JOIN Drink ON DrinkMapping.drink_id = Drink.drink_id WHERE Purchase.purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
-    for (drink_id, quantity, name) in cursor:
+    for (drink_id, quantity, drink_name) in cursor:
         new_purchase.drinks.append({"drink_id": drink_id,
-                                    "name": name,
+                                    "name": drink_name,
                                     "quantity": quantity})
     #Query desserts
-    query = ("SELECT DessertMapping.dessert_id, DessertMapping.quantity, Dessert.name FROM Purchase "
+    query = ("SELECT DessertMapping.dessert_id, DessertMapping.quantity, Dessert.dessert_name FROM Purchase "
              "JOIN DessertMapping ON Purchase.purchase_id = DessertMapping.purchase_id "
              "JOIN Dessert ON DessertMapping.dessert_id = Dessert.dessert_id WHERE Purchase.purchase_id = %s;")
     cursor.execute(query, (purchase_id,))
-    for (dessert_id, quantity, name) in cursor:
+    for (dessert_id, quantity, dessert_name) in cursor:
         new_purchase.desserts.append({"dessert_id": dessert_id,
-                                      "name": name,
+                                      "name": dessert_name,
                                       "quantity": quantity})
     return new_purchase
 
