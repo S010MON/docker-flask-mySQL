@@ -3,11 +3,12 @@ from datetime import datetime, timedelta
 
 class Purchase:
 
-    def __init__(self, customer_id, pizzas, drinks, desserts, discount_code=None):
+    def __init__(self, customer_id, pizzas, drinks, desserts, status, discount_code=None):
         self.customer_id = customer_id
         self.pizzas = pizzas
         self.drinks = drinks
         self.desserts = desserts
+        self.status = status
         self.purchase_id = None
         self.datetime = None
         self.estimated_delivery_time = None
