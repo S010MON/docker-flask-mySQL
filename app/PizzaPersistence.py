@@ -55,7 +55,7 @@ def get_all_pizzas():
 
 
 def get_pizza(current_pizza_id):
-    query = ("SELECT Pizza.pizza_id, Pizza.pizza_name, Topping.topping_name FROM Pizza "
+    query = ("SELECT Pizza.pizza_id, Pizza.pizza_name, Topping.topping_name, Topping.vegetarian FROM Pizza "
              "INNER JOIN ToppingMapping ON Pizza.pizza_id = ToppingMapping.pizza_id "
              "INNER JOIN Topping ON ToppingMapping.topping_id = Topping.topping_id "
              "WHERE Pizza.pizza_id = %s;")
@@ -63,10 +63,13 @@ def get_pizza(current_pizza_id):
     # The following algorithm makes sure, that all the toppings from a many-to-many relation
     # are geting mapped to the corresponding pizza
     first_entry = cursor.fetchone()
-    result_pizza = Pizza(first_entry[0], first_entry[1], first_entry[2])
+    vegetarian = first_entry[3]
+    result_pizza = Pizza(first_entry[0], first_entry[1], first_entry[2], vegetarian)
     rest_entries = cursor.fetchall()
     for entry in rest_entries:
         result_pizza.toppings.append(entry[2])
+        if not entry[3]:
+            result_pizza.vegetarian = False
     allPizzas = [result_pizza]
     assign_pizza_prices(allPizzas)
     return result_pizza
