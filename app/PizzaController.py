@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, make_response
 from datetime import datetime, timedelta
 import PizzaPersistence as db
 
@@ -80,9 +80,8 @@ def get_purchase_by_id(purchase_id):
 
 def post_customer(customer):
     if db.customer_exists(customer):
-        return jsonify(message="customer already exists",
-                       category="failed",
-                       status=400)
+        return make_response(jsonify(message="customer already exists",
+                                     category="failed"), 400)
     else:
         customer.address = db.create_address(customer.address)
         data = db.create_customer(customer).to_dict()
@@ -95,26 +94,22 @@ def post_customer(customer):
 def post_purchase(purchase):
     customer = db.get_customer(purchase.customer_id)
     if customer is None:
-        return jsonify(message="customer does not exist",
+        return make_response(jsonify(message="customer does not exist",
                        category="failed",
-                       data=None,
-                       status=400)
+                       data=None), 400)
 
     if purchase.pizzas is None:
-        return jsonify(message="order must contain a pizza",
+        return make_response(jsonify(message="order must contain a pizza",
                        category="failed",
-                       data=None,
-                       status=400)
+                       data=None), 400)
 
     if purchase.customer_id is None:
-        return jsonify(message="customer does not exist",
-                       category="failed",
-                       status=400)
+        return make_response(jsonify(message="customer does not exist",
+                       category="failed"), 400)
 
     if db.get_customer(purchase.customer_id) is None:
-        return jsonify(message="customer does not exist",
-                       category="failed",
-                       status=400)
+        return make_response(jsonify(message="customer does not exist",
+                       category="failed"), 400)
 
     purchase.total_cost = calculate_total_cost(purchase)
 
@@ -125,24 +120,21 @@ def post_purchase(purchase):
             db.remove_from_customer_pizzas_total(10)
 
     elif not db.valid_discount_code(purchase.discount_code):
-        return jsonify(message="invalid discount code",
-                       category="failed",
-                       status=400)
+        return make_response(jsonify(message="invalid discount code",
+                       category="failed"), 400)
     else:
         purchase.total_cost = purchase.total_cost * 0.9
         purchase.discount_code = None
 
     data = db.create_purchase(purchase)
     if data is None:
-        return jsonify(message="Failed to create order",
-                       category="failed",
-                       status=400)
+        return make_response(jsonify(message="Failed to create order",
+                       category="failed"), 400)
 
     data = data.to_dict()
-    return jsonify(message="order created",
+    return make_response(jsonify(message="order created",
                    category="success",
-                   data=data,
-                   status=201)
+                   data=data), 201)
 
 def cancel_purchase(purchase_id):
     purchase = db.get_purchase(purchase_id)
@@ -164,6 +156,7 @@ def cancel_purchase(purchase_id):
                    category="success",
                    data=purchase.to_dict(),
                    status=200)
+
 
 def delete_purchase(purchase_id):
     purchase = db.get_purchase(purchase_id)
