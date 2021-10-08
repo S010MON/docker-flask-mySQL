@@ -96,25 +96,34 @@ def assign_pizza_prices(allPizzas):
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_desserts():
-    query = (
-        "SELECT dessert_id, dessert_name, dessert_price FROM Dessert;")
+    query = ("SELECT dessert_id, dessert_name, dessert_price FROM Dessert;")
     cursor.execute(query)
     allDeserts = []
     for (dessert_id, dessert_name, dessert_price) in cursor:
         allDeserts.append(Dessert(dessert_id, dessert_name, dessert_price))  # add toppings
     return allDeserts
 
+def get_dessert(current_dessert_id):
+    query = ("SELECT dessert_id, dessert_name, dessert_price FROM Dessert WHERE dessert_id = %s;")
+    cursor.execute(query, (current_dessert_id,))
+    result = cursor.fetchone()
+    return Dessert(result[0], result[1], result[2])
 
 # ----------------------------------------------------------------------------------------------------------------------
 
 def get_all_drinks():
-    query = (
-        "SELECT drink_id, drink_name, drink_price FROM Drink;")  # need to add join for toppings
+    query = ("SELECT drink_id, drink_name, drink_price FROM Drink;")  # need to add join for toppings
     cursor.execute(query)
     allDrinks = []
     for (drink_id, drink_name, drink_price) in cursor:
         allDrinks.append(Drink(drink_id, drink_name, drink_price))  # add toppings
     return allDrinks
+
+def get_drink(current_drink_id):
+    query = ("SELECT drink_id, drink_name, drink_price FROM Drink;")
+    cursor.execute(query, (current_drink_id,))
+    result = cursor.fetchone()
+    return Drink(result[0], result[1], result[2])
 
 
 # ----------------------------------------------------------------------------------------------------------------------
@@ -249,9 +258,7 @@ def get_purchase(purchase_id):
     for (dessert_id, quantity) in cursor:
         new_purchase.desserts.append({"dessert_id": dessert_id,
                                     "quantity": quantity})
-
     return new_purchase
-
 
 def delete_purchase(purchase_id):
     deleted_order = get_purchase(purchase_id)
