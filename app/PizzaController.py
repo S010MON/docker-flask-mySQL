@@ -123,7 +123,7 @@ def post_purchase(purchase):
                        category="failed",
                        status=400)
     elif db.valid_discount_code(purchase.discount_code):
-        purchase.total_cost = purchase.total_cost * 1.09
+        purchase.total_cost = purchase.total_cost * 0.9
         purchase.discount_code = None
     else:
         db.add_to_customer_pizzas_total(len(purchase.pizzas))
@@ -196,7 +196,7 @@ def update_orders():
         print('Order ' + str(purchase.purchase_id) + ' ordered at ' + str(purchase.datetime), flush=True)
 
         if dispatch_time > datetime.now():
-            print('Looking for driver for order' + purchase.purchase_id, flush=True)
+            print('Looking for driver for order' + str(purchase.purchase_id), flush=True)
             customer = db.get_customer(purchase.customer_id)
             drivers = db.get_available_drivers(customer.address.postcode)
 
