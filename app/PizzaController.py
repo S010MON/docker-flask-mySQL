@@ -190,7 +190,7 @@ def update_orders():
 
             if len(drivers) >= 1:
                 db.set_delivery_driver(purchase.purchase_id, drivers[0].driver_id)
-                db.update_order_dispatched(purchase.purchase_id, datetime.now())
+                db.update_purchase_status(purchase.purchase_id, datetime.now())
                 print('Order: ' + str(purchase.purchase_id) + ' dispatched', flush=True)
             else:
                 print('No driver available', flush=True)
