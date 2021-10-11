@@ -14,7 +14,6 @@ scheduler = APScheduler()
 scheduler.init_app(app)
 scheduler.start()
 
-
 '''
 Pizza Service
 - API endpoints
@@ -24,8 +23,7 @@ Pizza Service
 
 class Home(Resource):
     def get(self):
-        update_orders()
-        return {"message":"Welcome to Pizza Maastricht"}, 200
+        return {"message": "Welcome to Pizza Maastricht"}, 200
 
 
 class Pizza(Resource):
@@ -82,7 +80,7 @@ class Purchase(Resource):
         parser.add_argument('desserts', type=dict, action='append')
         parser.add_argument('discount_code', type=str)
         args = parser.parse_args()
-        
+
         purchase = Purchase_obj(args['customer_id'],
                                 args['pizzas'],
                                 args['drinks'],
@@ -120,4 +118,3 @@ api.add_resource(Debug, '/debug')
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=5000)
-
