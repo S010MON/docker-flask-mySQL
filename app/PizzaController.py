@@ -132,11 +132,6 @@ def post_purchase(purchase):
 
 
 def cancel_purchase(purchase_id):
-    # TODO Fix return for purchase
-    return make_response(jsonify(message="Order cancelled",
-                                 category="success",
-                                 data=[]), 200)
-
     purchase = db.get_purchase(purchase_id)
     if purchase is None:
         return make_response(jsonify(message="Order does not exist",
@@ -155,27 +150,7 @@ def cancel_purchase(purchase_id):
                                  data=purchase.to_dict()), 200)
 
 
-def delete_purchase(purchase_id):
-    purchase = db.get_purchase(purchase_id)
-    if purchase is None:
-        return make_response(jsonify(message="Order does not exist",
-                                     category="failed",
-                                     data=None), 404)
-
-    last_minute = purchase.datetime + timedelta(minutes=5)
-    if datetime.now() > last_minute:
-        return make_response(jsonify(message="Cannot Cancel Order",
-                                     category="failed",
-                                     data=purchase.to_dict()), 400)
-
-    else:
-        return make_response(jsonify(message="Order Deleted",
-                                     category="success",
-                                     data=purchase.to_dict()), 200)
-
-
 def update_orders():
-    # TODO - run update on all current orders
     undelivered_purchases = db.get_undelivered_purchases()
     print(str(len(undelivered_purchases)) + ' undelivered orders in queue', flush=True)
 

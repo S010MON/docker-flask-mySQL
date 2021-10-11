@@ -99,14 +99,6 @@ class Purchase(Resource):
         response = ctrlr.cancel_purchase(args['purchase_id'])
         return response
 
-    def delete(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('purchase_id', type=int)
-        args = parser.parse_args()
-
-        response = ctrlr.delete_purchase(args['purchase_id'])
-        return response
-
 
 class Debug(Resource):
     def get(self):
