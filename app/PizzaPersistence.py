@@ -353,35 +353,29 @@ def get_available_drivers(postcode):
 
 def generate_discount_code() -> str:
     """ Create a new discount code and set it's boolean flag to `Valid=True` """
-    return "CODE456"
+    code = "1234ABC"
+    query = ("INSERT INTO Discount (code, used) VALUES (%s, FALSE );")
+    cursor.execute(query, (code,))
+    cnx.commit()
+    return code
 
 
 def valid_discount_code(code) -> bool:
     """ Check if the code has been used, return True if it is valid """
-    if code == "CODE123":
-        return True
-    else:
+    query = ("SELECT discount_id FROM Discount WHERE code = %s AND used = FALSE;")
+    cursor.execute(query, (code,))
+    result = cursor.fetchone()
+    if result is None:
         return False
+    else:
+        return True
 
 
 def set_discount_code_invalid(code) -> None:
     """ Set the code to invalid """
-    pass
-
-
-def add_to_customer_pizzas_total(no_of_pizzas) -> None:
-    """ Adds the number of pizzas to the customer's total number"""
-    pass
-
-
-def get_customer_pizzas_total(customer_id) -> int:
-    """ Gets the number of pizzas to the customer's total number"""
-    return 10
-
-
-def remove_from_customer_pizzas_total(no_of_pizzas) -> None:
-    """ Removes the number of pizzas from the customer's total"""
-    pass
+    query = ("UPDATE Discount SET used = TRUE WHERE code = %s;")
+    cursor.execute(query, (code,))
+    cnx.commit()
 
 
 def create_address(address):

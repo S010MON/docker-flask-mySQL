@@ -108,10 +108,7 @@ def post_purchase(purchase):
     purchase.total_cost = calculate_total_cost(purchase)
 
     if purchase.discount_code is None:
-        db.add_to_customer_pizzas_total(len(purchase.pizzas))
-        if db.get_customer_pizzas_total(purchase.customer_id):
-            purchase.discount_code = db.generate_discount_code()
-            db.remove_from_customer_pizzas_total(10)
+        purchase.discount_code = db.generate_discount_code()
 
     elif not db.valid_discount_code(purchase.discount_code):
         return make_response(jsonify(message="invalid discount code",

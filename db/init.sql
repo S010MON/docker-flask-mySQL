@@ -30,10 +30,7 @@ CREATE TABLE Address (
     street VARCHAR(255) NOT NULL,
     town VARCHAR(255) NOT NULL,
     postcode VARCHAR(6) NOT NULL,
-    primary key (address_id));
-
-CREATE DATABASE pizzas;
-USE pizzas;
+    PRIMARY KEY (address_id));
 
 CREATE TABLE Pizza (
     pizza_id INT NOT NULL AUTO_INCREMENT,
@@ -99,21 +96,26 @@ CREATE TABLE Customer (
     name VARCHAR(255),
     address_id INT NOT NULL,
     phone_number VARCHAR(255) NOT NULL,
-    primary key (customer_id));
+    PRIMARY KEY (customer_id));
 
 CREATE TABLE DeliveryDriver (
     driver_id INT NOT NULL AUTO_INCREMENT,
     operating_area VARCHAR(6) NOT NULL,
     on_task BOOL NOT NULL,
     name VARCHAR(255) NOT NULL,
-    primary key (driver_id));
+    PRIMARY KEY (driver_id));
 
 CREATE TABLE Address (
     address_id INT NOT NULL AUTO_INCREMENT,
     street VARCHAR(255) NOT NULL,
     town VARCHAR(255) NOT NULL,
     postcode VARCHAR(6) NOT NULL,
-    primary key (address_id));
+    PRIMARY KEY (address_id));
+
+CREATE TABLE Discount (
+    discount_id INT NOT NULL AUTO_INCREMENT,
+    code VARCHAR(7) NOT NULL,
+    used BOOL NOT NULL, PRIMARY KEY (discount_id));
 
 -- Add pizzas
 INSERT INTO Pizza (pizza_name) VALUES ("Margherita"); -- 1
