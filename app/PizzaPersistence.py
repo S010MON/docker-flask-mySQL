@@ -1,4 +1,6 @@
 import copy
+import random
+import string
 
 from entities.Purchase import Purchase
 from entities.Address import Address
@@ -353,7 +355,7 @@ def get_available_drivers(postcode):
 
 def generate_discount_code() -> str:
     """ Create a new discount code and set it's boolean flag to `Valid=True` """
-    code = "1234ABC"
+    code = ''.join(random.choice(string.ascii_letters) for x in range(7))
     query = ("INSERT INTO Discount (code, used) VALUES (%s, FALSE );")
     cursor.execute(query, (code,))
     cnx.commit()
